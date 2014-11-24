@@ -1,0 +1,78 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context=".BlueToothActivity" >
+
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/hello_world" />
+
+    <Button
+        android:id="@+id/detextNewDevicesButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textView1"
+        android:layout_centerHorizontal="true"
+        android:onClick="onDetectNewDevicesButton"
+        android:text="過去に接続したことのない携帯端末の検出" />
+
+    <ToggleButton
+        android:id="@+id/toggleButton1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/detextNewDevicesButton"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="38dp"
+        android:text="検索されるように設定"
+        android:onClick="onDisablingFeatureSearchedByNearDevice" />
+
+    <Button
+        android:id="@+id/clientButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/detextNewDevicesButton"
+        android:layout_centerVertical="true"
+        android:onClick="onClickClientButton"
+        android:text="接続" />
+
+    <Button
+        android:id="@+id/serverButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/clientButton"
+        android:layout_alignBottom="@+id/clientButton"
+        android:layout_alignRight="@+id/detextNewDevicesButton"
+        android:onClick="onClickServerButton"
+        android:text="接続待ち開始" />
+
+    <EditText
+        android:id="@+id/sendEditText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/serverButton"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="28dp"
+        android:ems="10" >
+
+        <requestFocus />
+    </EditText>
+
+    <TextView
+        android:id="@+id/getTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/sendEditText"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="51dp"
+        android:text="待機中..."
+        android:visibility="gone"
+         />
+
+</RelativeLayout>
