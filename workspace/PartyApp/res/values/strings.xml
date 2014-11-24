@@ -4,5 +4,9 @@
     <string name="app_name">PartyApp</string>
     <string name="action_settings">Settings</string>
     <string name="hello_world">Hello world!</string>
+    
+    
+    <string name="Yes">はい</string>
+    <string name="No">いいえ</string>
 
 </resources>
