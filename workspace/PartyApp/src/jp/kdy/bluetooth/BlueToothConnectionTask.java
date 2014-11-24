@@ -15,20 +15,20 @@ import android.content.DialogInterface.OnCancelListener;
 import android.os.AsyncTask;
 import android.util.Log;
 
-//BluetoothSocket‚ğæ“¾‚·‚é‚½‚ß‚ÌAsyncTask
+//BluetoothSocketã‚’å–å¾—ã™ã‚‹ãŸã‚ã®AsyncTask
 public class BlueToothConnectionTask extends AsyncTask<Object, Integer, BluetoothSocket> implements OnCancelListener {
 
 	private static final String TAG = "BlueToothAsyncTask";
 	Context mContext;
 	private boolean isClient = true;
 	
-	//ƒNƒ‰ƒCƒAƒ“ƒg‘¤‚Ìˆ—
+	//ã‚¯ãƒ©ã‚¤ã‚¢ãƒ³ãƒˆå´ã®å‡¦ç†
     private BluetoothDevice mDevice;
     
-    //ƒT[ƒo‘¤‚Ìˆ—
+    //ã‚µãƒ¼ãƒå´ã®å‡¦ç†
     private BluetoothServerSocket mServSock = null;
     
-    //‹¤’Êˆ—(UUID‚Ì¶¬‚È‚Ç)
+    //å…±é€šå‡¦ç†(UUIDã®ç”Ÿæˆãªã©)
     public static final UUID TECHBOOSTER_BTSAMPLE_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
     static BluetoothAdapter myBlueToothAdapter;
     public String myNumber;
@@ -80,10 +80,10 @@ public class BlueToothConnectionTask extends AsyncTask<Object, Integer, Bluetoot
 		Log.d(TAG, "doInBackgroundClient start");
 		BluetoothSocket tmpSock = null;
 		try{
-            //©ƒfƒoƒCƒX‚ÌBluetoothƒNƒ‰ƒCƒAƒ“ƒgƒ\ƒPƒbƒg‚Ìæ“¾
+            //è‡ªãƒ‡ãƒã‚¤ã‚¹ã®Bluetoothã‚¯ãƒ©ã‚¤ã‚¢ãƒ³ãƒˆã‚½ã‚±ãƒƒãƒˆã®å–å¾—
 			Log.d(TAG, "start getting client socket");
             tmpSock = mDevice.createRfcommSocketToServiceRecord(TECHBOOSTER_BTSAMPLE_UUID);
-            //ƒT[ƒo[‘¤‚ÉÚ‘±—v‹
+            //ã‚µãƒ¼ãƒãƒ¼å´ã«æ¥ç¶šè¦æ±‚
 			Log.d(TAG, "start connecting server");
             tmpSock.connect();
 			Log.d(TAG, "end connecting server - success");
@@ -107,12 +107,12 @@ public class BlueToothConnectionTask extends AsyncTask<Object, Integer, Bluetoot
 		BluetoothSocket tmpSock = null;
 		mServSock = null;
 		try{
-            //©ƒfƒoƒCƒX‚ÌBluetoothƒT[ƒo[ƒ\ƒPƒbƒg‚Ìæ“¾
+            //è‡ªãƒ‡ãƒã‚¤ã‚¹ã®Bluetoothã‚µãƒ¼ãƒãƒ¼ã‚½ã‚±ãƒƒãƒˆã®å–å¾—
 			Log.d(TAG, "start getting server socket:"+myBlueToothAdapter.getState());
 			mServSock = myBlueToothAdapter.listenUsingRfcommWithServiceRecord("BlueToothSample03", TECHBOOSTER_BTSAMPLE_UUID);
 			Log.d(TAG, "mServSock:"+mServSock);
 			
-			//ƒNƒ‰ƒCƒAƒ“ƒg‘¤‚©‚ç‚ÌÚ‘±—v‹‘Ò‚¿Bƒ\ƒPƒbƒg‚ª•Ô‚³‚ê‚éB
+			//ã‚¯ãƒ©ã‚¤ã‚¢ãƒ³ãƒˆå´ã‹ã‚‰ã®æ¥ç¶šè¦æ±‚å¾…ã¡ã€‚ã‚½ã‚±ãƒƒãƒˆãŒè¿”ã•ã‚Œã‚‹ã€‚
  			Log.d(TAG, "accepting socket from client...");
             tmpSock = mServSock.accept();
   			Log.d(TAG, "accepted");
@@ -120,8 +120,8 @@ public class BlueToothConnectionTask extends AsyncTask<Object, Integer, Bluetoot
             e.printStackTrace();
         }finally{
             /*
-             *  BluetoothSocket‚ğ•Â‚¶‚½Û‚ÉABluetoothServerSocket‚Í•Â‚¶‚ç‚ê‚È‚¢‚½‚ßA‚±‚±‚Å•Â‚¶‚Ä‚ ‚°‚È‚¯‚ê‚Î‚È‚ç‚È‚¢
-             *  ‚È‚¨AƒLƒƒƒ“ƒZƒ‹‚Å•Â‚¶‚½ê‡‚Í‚±‚Ìˆ—‚ÍÀ{‚³‚ê‚È‚¢
+             *  BluetoothSocketã‚’é–‰ã˜ãŸéš›ã«ã€BluetoothServerSocketã¯é–‰ã˜ã‚‰ã‚Œãªã„ãŸã‚ã€ã“ã“ã§é–‰ã˜ã¦ã‚ã’ãªã‘ã‚Œã°ãªã‚‰ãªã„
+             *  ãªãŠã€ã‚­ãƒ£ãƒ³ã‚»ãƒ«ã§é–‰ã˜ãŸå ´åˆã¯ã“ã®å‡¦ç†ã¯å®Ÿæ–½ã•ã‚Œãªã„
              */
             try {
 				if(mServSock != null)
@@ -155,7 +155,7 @@ public class BlueToothConnectionTask extends AsyncTask<Object, Integer, Bluetoot
 	}
 	
 	/**
-	 * ƒvƒƒOƒŒƒXƒ_ƒCƒAƒƒO‚ÌƒLƒƒƒ“ƒZƒ‹
+	 * ãƒ—ãƒ­ã‚°ãƒ¬ã‚¹ãƒ€ã‚¤ã‚¢ãƒ­ã‚°ã®ã‚­ãƒ£ãƒ³ã‚»ãƒ«
 	 */
 	@Override
 	public void onCancel(DialogInterface dialog) {

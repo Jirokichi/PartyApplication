@@ -18,7 +18,7 @@ public class ManagedDevices {
 	public String toString(){
 		String value = null;
 		value = "hasDevicesHistory(" + mSize + "):"+hasDevicesHistory;
-		value += "\n";
+		value += "Â¥n";
 		if(deviceInHistory == null){
 			return value + "deviceInHistory = null";
 		}
@@ -44,7 +44,7 @@ public class ManagedDevices {
 		}
 	}
 	
-	// BluetoothAdapter‚©‚çAÚ‘±—š—ğ‚Ì‚ ‚éƒfƒoƒCƒX‚Ìî•ñ‚ğæ“¾
+	// BluetoothAdapterã‹ã‚‰ã€æ¥ç¶šå±¥æ­´ã®ã‚ã‚‹ãƒ‡ãƒã‚¤ã‚¹ã®æƒ…å ±ã‚’å–å¾—
 	private void setListOfUsersYouHaveConnected(BluetoothAdapter bt) {
 		Set<BluetoothDevice> set = bt.getBondedDevices();
 		Iterator<BluetoothDevice> iterator = set.iterator();

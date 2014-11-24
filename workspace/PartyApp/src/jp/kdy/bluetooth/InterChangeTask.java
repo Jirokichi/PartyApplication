@@ -39,12 +39,12 @@ public class InterChangeTask extends AsyncTask<Object, Object, InterChangeTask.B
 	}
 
 	/***
-	 * ƒRƒ“ƒXƒgƒ‰ƒNƒ^‚Ì’è‹`
+	 * ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿ã®å®šç¾©
 	 * 
 	 * @param context
 	 * @param socket
 	 * @param isSender
-	 *            ‘—M‚·‚éê‡
+	 *            é€ä¿¡ã™ã‚‹å ´åˆ
 	 */
 	public InterChangeTask(BluetoothSocket socket, boolean isSender, String sendMessage) {
 		this.isSender = isSender;
@@ -52,7 +52,7 @@ public class InterChangeTask extends AsyncTask<Object, Object, InterChangeTask.B
 		
 		mSocket = socket;
 		try {
-			// Ú‘±Ï‚Ýƒ\ƒPƒbƒg‚©‚çI/OƒXƒgƒŠ[ƒ€‚ðŽæ“¾
+			// æŽ¥ç¶šæ¸ˆã¿ã‚½ã‚±ãƒƒãƒˆã‹ã‚‰I/Oã‚¹ãƒˆãƒªãƒ¼ãƒ ã‚’å–å¾—
 			out = socket.getOutputStream();
 			in = socket.getInputStream();
 		} catch (IOException e1) {
@@ -66,7 +66,7 @@ public class InterChangeTask extends AsyncTask<Object, Object, InterChangeTask.B
 	}
 
 	public void write(byte[] buf) {
-		// OutputƒXƒgƒŠ[ƒ€‚Ö‚Ìƒf[ƒ^‘‚«ž‚Ý
+		// Outputã‚¹ãƒˆãƒªãƒ¼ãƒ ã¸ã®ãƒ‡ãƒ¼ã‚¿æ›¸ãè¾¼ã¿
 		try {
 			out.write(buf);
 		} catch (IOException e) {
@@ -81,7 +81,7 @@ public class InterChangeTask extends AsyncTask<Object, Object, InterChangeTask.B
 		log("doInBackground:" + params);
 
 		BlueToothResult result = null;
-		// ‚±‚¿‚ç‚©‚çî•ñ‚ð‘—M‚·‚éê‡
+		// ã“ã¡ã‚‰ã‹ã‚‰æƒ…å ±ã‚’é€ä¿¡ã™ã‚‹å ´åˆ
 		if(mSocket == null || !mSocket.isConnected()){
 			result = new BlueToothResult();
 			result.type = ResultType.Exception;
@@ -90,7 +90,7 @@ public class InterChangeTask extends AsyncTask<Object, Object, InterChangeTask.B
 		else if (isSender) {
 			result = doInBackgroundSend();
 		}
-		// ŽóM‘Ò‹@ó‘Ô
+		// å—ä¿¡å¾…æ©ŸçŠ¶æ…‹
 		else {
 			result = doInBackgroundReceive();
 		}
@@ -149,7 +149,7 @@ public class InterChangeTask extends AsyncTask<Object, Object, InterChangeTask.B
 			return;
 		}
 		
-		// ‚±‚±‚ÅŒ‹‰Ê‚Ì‹Lq‚ð‚·‚é
+		// ã“ã“ã§çµæžœã®è¨˜è¿°ã‚’ã™ã‚‹
 		this.mReceiver.didBlueToothMessageResultReceiver(result);
 	}
 

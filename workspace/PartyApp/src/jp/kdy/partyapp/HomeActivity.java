@@ -66,7 +66,7 @@ public class HomeActivity extends BlueToothBaseActivity {
 					ListView listView = (ListView) parent;
 					BluetoothDevice item = (BluetoothDevice) listView.getItemAtPosition(position);
 					startConnectingAsClient(item);
-					Toast.makeText(mContext, "Ú‘±ŠJnF" + item.getAddress(), Toast.LENGTH_SHORT).show();
+					Toast.makeText(mContext, "æ¥ç¶šé–‹å§‹ï¼š" + item.getAddress(), Toast.LENGTH_SHORT).show();
 				} else {
 					closeSocket();
 				}
@@ -116,9 +116,9 @@ public class HomeActivity extends BlueToothBaseActivity {
 			this.startActivity(intent);
 		} else {
 			if (mSocket != null) {
-				Toast.makeText(this, String.format("‚·‚Å‚É%s‚Æ‚ÌÚ‘±‚ªØ‚ê‚Ä‚¢‚Ü‚·", mSocket.getRemoteDevice()), Toast.LENGTH_SHORT).show();
+				Toast.makeText(this, String.format("ã™ã§ã«%sã¨ã®æ¥ç¶šãŒåˆ‡ã‚Œã¦ã„ã¾ã™", mSocket.getRemoteDevice()), Toast.LENGTH_SHORT).show();
 			} else {
-				Toast.makeText(this, "‚·‚Å‚É‘¼’[––‚Æ‚ÌÚ‘±‚ªØ‚ê‚Ä‚¢‚Ü‚·", Toast.LENGTH_SHORT).show();
+				Toast.makeText(this, "ã™ã§ã«ä»–ç«¯æœ«ã¨ã®æ¥ç¶šãŒåˆ‡ã‚Œã¦ã„ã¾ã™", Toast.LENGTH_SHORT).show();
 
 			}
 		}
@@ -148,7 +148,7 @@ public class HomeActivity extends BlueToothBaseActivity {
 	}
 
 	private void closeSocket() {
-		Toast.makeText(mContext, String.format("%s‚Æ‚ÌÚ‘±‚ğØ’f‚µ‚Ü‚µ‚½", mSocket.getRemoteDevice()), Toast.LENGTH_LONG).show();
+		Toast.makeText(mContext, String.format("%sã¨ã®æ¥ç¶šã‚’åˆ‡æ–­ã—ã¾ã—ãŸ", mSocket.getRemoteDevice()), Toast.LENGTH_LONG).show();
 		if (mSocket != null) {
 			try {
 				mSocket.close();
@@ -159,7 +159,7 @@ public class HomeActivity extends BlueToothBaseActivity {
 			}
 		}
 
-		// Application‚ÌÀs‚Ì‹Ö~‰»
+		// Applicationã®å®Ÿè¡Œã®ç¦æ­¢åŒ–
 		Button b = (Button) this.findViewById(R.id.app1Button);
 		b.setEnabled(false);
 
@@ -259,9 +259,9 @@ public class HomeActivity extends BlueToothBaseActivity {
 		mSocket = result;
 
 		if (isCancel) {
-			Toast.makeText(this, "ŒŸõ‚ªƒLƒƒƒ“ƒZƒ‹‚³‚ê‚Ü‚µ‚½", Toast.LENGTH_LONG).show();
+			Toast.makeText(this, "æ¤œç´¢ãŒã‚­ãƒ£ãƒ³ã‚»ãƒ«ã•ã‚Œã¾ã—ãŸ", Toast.LENGTH_LONG).show();
 		} else if (mSocket != null) {
-			Toast.makeText(this, String.format("%s‚ÆÚ‘±‚µ‚Ü‚µ‚½", mSocket.getRemoteDevice()), Toast.LENGTH_LONG).show();
+			Toast.makeText(this, String.format("%sã¨æ¥ç¶šã—ã¾ã—ãŸ", mSocket.getRemoteDevice()), Toast.LENGTH_LONG).show();
 			log("mSocket.getRemoteDevice();:" + mSocket.getRemoteDevice());
 			log("isConnected:" + mSocket.isConnected());
 			mApp.setBluetoothSocket(mSocket);
@@ -269,7 +269,7 @@ public class HomeActivity extends BlueToothBaseActivity {
 			b.setEnabled(true);
 			this.mApp.parentPlayer = isClient;
 		} else {
-			Toast.makeText(this, "w’è‚µ‚½’[––‚ª‚İ‚Â‚©‚è‚Ü‚¹‚ñ‚Å‚µ‚½", Toast.LENGTH_LONG).show();
+			Toast.makeText(this, "æŒ‡å®šã—ãŸç«¯æœ«ãŒã¿ã¤ã‹ã‚Šã¾ã›ã‚“ã§ã—ãŸ", Toast.LENGTH_LONG).show();
 		}
 	}
 

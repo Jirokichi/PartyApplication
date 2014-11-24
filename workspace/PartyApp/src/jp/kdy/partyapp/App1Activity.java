@@ -31,7 +31,7 @@ public class App1Activity extends Activity implements BlueToothMessageResultRece
 		mSocket = mApp.mSocket;
 
 		if (mSocket == null) {
-			log("Socket‚È‚µ");
+			log("Socketãªã—");
 			return;
 		}
 
@@ -57,7 +57,7 @@ public class App1Activity extends Activity implements BlueToothMessageResultRece
 		b.setEnabled(false);
 
 		TextView tv = (TextView)this.findViewById(R.id.chatBoard);
-		tv.setText(tv.getText() + "\n" + "©•ª:" + message);
+		tv.setText(tv.getText() + "Â¥n" + "è‡ªåˆ†:" + message);
 		
 		InterChangeTask ict = new InterChangeTask(mSocket, true, message);
 		ict.setBlueToothReceiver(this);
@@ -77,7 +77,7 @@ public class App1Activity extends Activity implements BlueToothMessageResultRece
 		case SendSuccess:
 			Toast.makeText(this, result.toString(), Toast.LENGTH_LONG).show();
 			if (mSocket != null) {
-				// Ú‘±Š®—¹‚Ìˆ—
+				// æ¥ç¶šå®Œäº†æ™‚ã®å‡¦ç†
 				InterChangeTask ict = new InterChangeTask(mSocket, false, null);
 				ict.setBlueToothReceiver(this);
 				ict.execute(new Object[] { "X Wait=" + mSocket + ")" });
@@ -87,7 +87,7 @@ public class App1Activity extends Activity implements BlueToothMessageResultRece
 			Toast.makeText(this, result.toString(), Toast.LENGTH_LONG).show();
 			
 			tv = (TextView)this.findViewById(R.id.chatBoard);
-			tv.setText(tv.getText() + "\n" + "‘Šè:" + result.resultMessage);
+			tv.setText(tv.getText() + "Â¥n" + "ç›¸æ‰‹:" + result.resultMessage);
 			b = (Button) this.findViewById(R.id.chatSendButton);
 			b.setEnabled(true);
 			
@@ -95,7 +95,7 @@ public class App1Activity extends Activity implements BlueToothMessageResultRece
 		case Exception:
 			Toast.makeText(this, result.toString(), Toast.LENGTH_LONG).show();
 			tv = (TextView)this.findViewById(R.id.chatBoard);
-			tv.setText(tv.getText() + "\n" + "Exception:" + result.resultMessage);
+			tv.setText(tv.getText() + "Â¥n" + "Exception:" + result.resultMessage);
 			b = (Button) this.findViewById(R.id.chatSendButton);
 			b.setEnabled(false);
 			
@@ -104,7 +104,7 @@ public class App1Activity extends Activity implements BlueToothMessageResultRece
 		case Cancel:
 			Toast.makeText(this, result.toString(), Toast.LENGTH_LONG).show();
 			tv = (TextView)this.findViewById(R.id.chatBoard);
-			tv.setText(tv.getText() + "\n" + "Cancel:" + result.resultMessage);
+			tv.setText(tv.getText() + "Â¥n" + "Cancel:" + result.resultMessage);
 			break;
 		default:
 			break;

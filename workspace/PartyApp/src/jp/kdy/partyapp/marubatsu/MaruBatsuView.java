@@ -61,7 +61,7 @@ public class MaruBatsuView extends View {
 	}
 
 	/*
-	 * •`‰æ—pPaint‚Ì‰Šú‰»
+	 * æç”»ç”¨Paintã®åˆæœŸåŒ–
 	 */
 	private void initPaint() {
 		log("initPaint");
@@ -78,7 +78,7 @@ public class MaruBatsuView extends View {
 	}
 
 	/**
-	 * ‰æ–ÊƒTƒCƒY•ÏX‚Ì’Ê’m
+	 * ç”»é¢ã‚µã‚¤ã‚ºå¤‰æ›´æ™‚ã®é€šçŸ¥
 	 * 
 	 * @param w
 	 *            , h, oldw, oldh
@@ -87,7 +87,7 @@ public class MaruBatsuView extends View {
 		log("onSizeChanged Width:" + w + ",Height:" + h);
 		mWidth = w;
 		mHeight = h;
-		// ƒLƒƒƒ“ƒoƒXì¬
+		// ã‚­ãƒ£ãƒ³ãƒã‚¹ä½œæˆ
 		mBitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
 		mCanvas = new Canvas(mBitmap);
 		mBitmapTmp = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
@@ -156,7 +156,7 @@ public class MaruBatsuView extends View {
 		return true;
 	}
 
-	/* •`‰æŠÖ” */
+	/* æç”»é–¢æ•° */
 	@Override
 	protected void onDraw(Canvas canvas) {
 		log("onDraw");
@@ -168,7 +168,7 @@ public class MaruBatsuView extends View {
 	}
 
 	private int pointXY = -1;
-	private static final float TOUCH_TOLERANCE = 4;// Å¬ˆÚ“®—Ê
+	private static final float TOUCH_TOLERANCE = 4;// æœ€å°ç§»å‹•é‡
 
 	private void touch_start(float x, float y) {
 
@@ -200,7 +200,7 @@ public class MaruBatsuView extends View {
 			isTouching = false;
 			resfreshTmpCanvas();
 
-			// ƒ^ƒbƒvŠJn‚Ì˜g‚Æ˜b‚µ‚½˜g‚ª“¯‚¶‚©‚Ç‚¤‚©ƒ`ƒFƒbƒN‚·‚é
+			// ã‚¿ãƒƒãƒ—é–‹å§‹ã®æ ã¨è©±ã—ãŸæ ãŒåŒã˜ã‹ã©ã†ã‹ãƒã‚§ãƒƒã‚¯ã™ã‚‹
 			int i = getIfromXorY(y);
 			int j = getIfromXorY(x);
 			int lpointXY = i * 10 + j;

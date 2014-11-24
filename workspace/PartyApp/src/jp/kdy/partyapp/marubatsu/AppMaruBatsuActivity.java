@@ -22,7 +22,7 @@ public class AppMaruBatsuActivity extends Activity implements BlueToothMessageRe
 	BlueToothBaseApplication mApp;
 	BluetoothSocket mSocket;
 
-	// ”Õ–Ê‚Ìó‹µ‚ğŠÇ—
+	// ç›¤é¢ã®çŠ¶æ³ã‚’ç®¡ç†
 	private final int ROW = 3;
 	private final int LINE = 3;
 	private StatusOfRecord mGameScreen[][] = { { StatusOfRecord.Empty, StatusOfRecord.Empty, StatusOfRecord.Empty }, { StatusOfRecord.Empty, StatusOfRecord.Empty, StatusOfRecord.Empty }, { StatusOfRecord.Empty, StatusOfRecord.Empty, StatusOfRecord.Empty } };
@@ -45,7 +45,7 @@ public class AppMaruBatsuActivity extends Activity implements BlueToothMessageRe
 		mView.setMyTouchListener(this);
 
 		if (mSocket == null) {
-			log("Socket‚È‚µ");
+			log("Socketãªã—");
 			return;
 		}
 
@@ -70,7 +70,7 @@ public class AppMaruBatsuActivity extends Activity implements BlueToothMessageRe
 		b.setEnabled(false);
 
 		TextView tv = (TextView) this.findViewById(R.id.chatBoard);
-		tv.setText(tv.getText() + "\n" + "©•ª:" + message);
+		tv.setText(tv.getText() + "Â¥n" + "è‡ªåˆ†:" + message);
 
 		InterChangeTask ict = new InterChangeTask(mSocket, true, message);
 		ict.setBlueToothReceiver(this);
@@ -90,7 +90,7 @@ public class AppMaruBatsuActivity extends Activity implements BlueToothMessageRe
 		case SendSuccess:
 			Toast.makeText(this, result.toString(), Toast.LENGTH_LONG).show();
 			if (mSocket != null) {
-				// Ú‘±Š®—¹‚Ìˆ—
+				// æ¥ç¶šå®Œäº†æ™‚ã®å‡¦ç†
 				InterChangeTask ict = new InterChangeTask(mSocket, false, null);
 				ict.setBlueToothReceiver(this);
 				ict.execute(new Object[] { "X Wait=" + mSocket + ")" });
@@ -106,7 +106,7 @@ public class AppMaruBatsuActivity extends Activity implements BlueToothMessageRe
 			log(String.format("setMaruOrBatsu(%d,%d)", i, j));
 			setMaruOrBatsu(i, j, enemyType());
 
-			// ‚·‚×‚Ä–„‚Ü‚Á‚Ä‚¢‚é‚©‚Ìƒ`ƒFƒbƒN‚ğÀ{‚µA‚»‚ÌŒãŸ”s‚ğŒˆ’è‚·‚é
+			// ã™ã¹ã¦åŸ‹ã¾ã£ã¦ã„ã‚‹ã‹ã®ãƒã‚§ãƒƒã‚¯ã‚’å®Ÿæ–½ã—ã€ãã®å¾Œå‹æ•—ã‚’æ±ºå®šã™ã‚‹
 			if (judgeWinner(enemyType())) {
 				log("Loser");
 				hasPermissionToSet = false;
@@ -116,7 +116,7 @@ public class AppMaruBatsuActivity extends Activity implements BlueToothMessageRe
 		case Exception:
 			Toast.makeText(this, result.toString(), Toast.LENGTH_LONG).show();
 			tv = (TextView) this.findViewById(R.id.chatBoard);
-			tv.setText(tv.getText() + "\n" + "Exception:" + result.resultMessage);
+			tv.setText(tv.getText() + "Â¥n" + "Exception:" + result.resultMessage);
 			b = (Button) this.findViewById(R.id.chatSendButton);
 			b.setEnabled(false);
 
@@ -124,7 +124,7 @@ public class AppMaruBatsuActivity extends Activity implements BlueToothMessageRe
 		case Cancel:
 			Toast.makeText(this, result.toString(), Toast.LENGTH_LONG).show();
 			tv = (TextView) this.findViewById(R.id.chatBoard);
-			tv.setText(tv.getText() + "\n" + "Cancel:" + result.resultMessage);
+			tv.setText(tv.getText() + "Â¥n" + "Cancel:" + result.resultMessage);
 			break;
 		default:
 			break;
@@ -150,7 +150,7 @@ public class AppMaruBatsuActivity extends Activity implements BlueToothMessageRe
 		ict.setBlueToothReceiver(this);
 		ict.execute(new Object[] { "Send=" + mSocket + ")" });
 
-		// ‚·‚×‚Ä–„‚Ü‚Á‚Ä‚¢‚é‚©‚Ìƒ`ƒFƒbƒN‚ğÀ{‚µA‚»‚ÌŒãŸ”s‚ğŒˆ’è‚·‚é
+		// ã™ã¹ã¦åŸ‹ã¾ã£ã¦ã„ã‚‹ã‹ã®ãƒã‚§ãƒƒã‚¯ã‚’å®Ÿæ–½ã—ã€ãã®å¾Œå‹æ•—ã‚’æ±ºå®šã™ã‚‹
 		if (judgeWinner(mType)) {
 			log("Winner");
 		}
@@ -191,19 +191,19 @@ public class AppMaruBatsuActivity extends Activity implements BlueToothMessageRe
 			return false;
 		}
 
-		// ROWˆê—ñ”»’è
+		// ROWä¸€åˆ—åˆ¤å®š
 		for (int i = 0; i < ROW; i++) {
 			if ((mGameScreen[i][0] == kind && mGameScreen[i][1] == kind && mGameScreen[i][2] == kind))
 				return true;
 		}
 		
-		// LINEˆê—ñ”»’è
+		// LINEä¸€åˆ—åˆ¤å®š
 		for (int j = 0; j < LINE; j++) {
 			if ((mGameScreen[0][j] == kind && mGameScreen[1][j] == kind && mGameScreen[2][j] == kind))
 				return true;
 		}
 		
-		// Î‚ß”»’è
+		// æ–œã‚åˆ¤å®š
 		if (mGameScreen[0][0] == kind && mGameScreen[1][1] == kind && mGameScreen[2][2] == kind) {
 			return true;
 		}
@@ -212,7 +212,7 @@ public class AppMaruBatsuActivity extends Activity implements BlueToothMessageRe
 		}
 
 		
-		// ‘Sƒ}ƒX–„‚Ü‚Á‚Ä‚¢‚é‚©‚Ì”»’è
+		// å…¨ãƒã‚¹åŸ‹ã¾ã£ã¦ã„ã‚‹ã‹ã®åˆ¤å®š
 		boolean empty = false;
 		for (int i = 0; i < this.mGameScreen.length; i++) {
 			for (int j = 0; j < this.mGameScreen[i].length; j++) {
@@ -222,10 +222,10 @@ public class AppMaruBatsuActivity extends Activity implements BlueToothMessageRe
 			}
 		}
 		if (empty) {
-			// ‚Ü‚¾‘±‚¯‚ç‚ê‚é
+			// ã¾ã ç¶šã‘ã‚‰ã‚Œã‚‹
 			return false;
 		} else {
-			// ‚·‚×‚Ä–„‚Ü‚Á‚½‚½‚ß‚à‚¤‘±‚¯‚ç‚ê‚È‚¢
+			// ã™ã¹ã¦åŸ‹ã¾ã£ãŸãŸã‚ã‚‚ã†ç¶šã‘ã‚‰ã‚Œãªã„
 			return false;
 		}
 

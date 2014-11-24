@@ -5,9 +5,9 @@ import android.bluetooth.BluetoothSocket;
 
 public interface BlueToothConnectionResultReceiver {
 	/**
-	 * ƒNƒ‰ƒCƒAƒ“ƒg‚ÆƒT[ƒo[Ú‘±—v‹‚ÌŒ‹‰Ê‚ğ•Ô‚·ƒƒ\ƒbƒh
-	 * @param result ƒT[ƒo[‚Æ‚Ì’ÊM‚É•K—v‚ÈBluetoothSocket(¸”s‚Ínull)
-	 * @param isClient (©•ª‚ªƒNƒ‰ƒCƒAƒ“ƒg‚©‚Ç‚¤‚©)
+	 * ã‚¯ãƒ©ã‚¤ã‚¢ãƒ³ãƒˆã¨ã‚µãƒ¼ãƒãƒ¼æ¥ç¶šè¦æ±‚ã®çµæœã‚’è¿”ã™ãƒ¡ã‚½ãƒƒãƒ‰
+	 * @param result ã‚µãƒ¼ãƒãƒ¼ã¨ã®é€šä¿¡ã«å¿…è¦ãªBluetoothSocket(å¤±æ•—æ™‚ã¯null)
+	 * @param isClient (è‡ªåˆ†ãŒã‚¯ãƒ©ã‚¤ã‚¢ãƒ³ãƒˆã‹ã©ã†ã‹)
 	 */
 	public void didBlueToothConnectionResultReceiver(BluetoothSocket result, boolean isClient, boolean isCancel);
 }

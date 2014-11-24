@@ -5,18 +5,18 @@ public interface MyTouchListener {
 	enum MyType{ Maru, Batsu, No_Permission};
 	enum StatusOfRecord{ Maru, Batsu, Empty };
 	/**
-	 * ƒAƒNƒVƒ‡ƒ“ƒƒ\ƒbƒh
-	 * ÀÛ‚É›‚â~‚ğƒZƒbƒg‚·‚éŒ ŒÀ‚ª‚ ‚é‚Æ‚«‚ÉŒÄ‚Ño‚³‚ê‚éƒƒ\ƒbƒh
+	 * ã‚¢ã‚¯ã‚·ãƒ§ãƒ³ãƒ¡ã‚½ãƒƒãƒ‰
+	 * å®Ÿéš›ã«â—‹ã‚„Ã—ã‚’ã‚»ãƒƒãƒˆã™ã‚‹æ¨©é™ãŒã‚ã‚‹ã¨ãã«å‘¼ã³å‡ºã•ã‚Œã‚‹ãƒ¡ã‚½ãƒƒãƒ‰
 	 * @param result
 	 */
 	public void startAction(int i, int j);
 	
 	/**
 	 * /**
-	 * w’è‚µ‚½ƒ}ƒX‚ÌŒ ŒÀ‚ğƒ`ƒFƒbƒN‚·‚é‚½‚ß‚Ìƒƒ\ƒbƒh
+	 * æŒ‡å®šã—ãŸãƒã‚¹ã®æ¨©é™ã‚’ãƒã‚§ãƒƒã‚¯ã™ã‚‹ãŸã‚ã®ãƒ¡ã‚½ãƒƒãƒ‰
 	 * @param i
 	 * @param j
-	 * @return ƒ}ƒX‚ÉƒZƒbƒg‚·‚é‚±‚Æ‚ª‰Â”\‚È‚ç‚Î0‚©1‚ğ•Ô‚·(0‚È‚ç›A1‚È‚ç~)B•s‰Â”\‚Èê‡‚Í
+	 * @return ãƒã‚¹ã«ã‚»ãƒƒãƒˆã™ã‚‹ã“ã¨ãŒå¯èƒ½ãªã‚‰ã°0ã‹1ã‚’è¿”ã™(0ãªã‚‰â—‹ã€1ãªã‚‰Ã—)ã€‚ä¸å¯èƒ½ãªå ´åˆã¯
 	 */
 	public MyType checkPermission(int i, int j);
 	

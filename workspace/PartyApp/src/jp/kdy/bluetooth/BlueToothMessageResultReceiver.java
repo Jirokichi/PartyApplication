@@ -5,7 +5,7 @@ import jp.kdy.bluetooth.InterChangeTask.BlueToothResult;
 
 public interface BlueToothMessageResultReceiver {
 	/**
-	 * データ通信の結果
+	 * 繝�繝ｼ繧ｿ騾壻ｿ｡縺ｮ邨先棡
 	 * @param result
 	 */
 	public void didBlueToothMessageResultReceiver(BlueToothResult result);

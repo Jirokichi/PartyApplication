@@ -37,13 +37,13 @@ public class BlueToothBaseApplication extends Application {
 	}
 	
 	/*
-	 * ƒAƒvƒŠƒP[ƒVƒ‡ƒ“ƒŒƒxƒ‹‚ÅBlueToothAdapter‚ğ•Û‘¶‚·‚é
+	 * ã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³ãƒ¬ãƒ™ãƒ«ã§BlueToothAdapterã‚’ä¿å­˜ã™ã‚‹
 	 */
 	public void setBluetoothSocket(BluetoothSocket socket){
 		mSocket = socket;
 	}
 	/*
-	 * •Û‘¶‚³‚ê‚½BlueToothAdapter‚ğæ“¾‚·‚é
+	 * ä¿å­˜ã•ã‚ŒãŸBlueToothAdapterã‚’å–å¾—ã™ã‚‹
 	 */
 	public BluetoothSocket getBluetoothSocket(){
 		 return this.mSocket;

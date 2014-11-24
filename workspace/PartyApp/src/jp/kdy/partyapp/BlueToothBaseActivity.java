@@ -24,14 +24,14 @@ public abstract class BlueToothBaseActivity extends Activity implements BlueToot
 	private static final int REQUEST_ACTIVITY_ENABLE_BLUETOOTH = 0;
 	private static final int REQUEST_ACTIVITY_ENABLE_SEARCHED = 1;
 	
-	// ƒNƒ‰ƒCƒ“ƒAƒ“ƒg‚©‚Ç‚¤‚©‚Ìƒtƒ‰ƒO
+	// ã‚¯ãƒ©ã‚¤ãƒ³ã‚¢ãƒ³ãƒˆã‹ã©ã†ã‹ã®ãƒ•ãƒ©ã‚°
 	boolean isClientDevice = true;
 	protected ManagedDevices mDevices = null;
 	
 	BluetoothAdapter mBtAdapter = null;
 	
 	
-	// Activity‚Íˆµ‚¢‚É’ˆÓB—˜—p‚·‚é‚Ì‚ÍToast‚¾‚¯‚É‚·‚é‚×‚«
+	// Activityã¯æ‰±ã„ã«æ³¨æ„ã€‚åˆ©ç”¨ã™ã‚‹ã®ã¯Toastã ã‘ã«ã™ã‚‹ã¹ã
 	Activity mActivity;
 	protected Context mContext;
 	
@@ -46,31 +46,31 @@ public abstract class BlueToothBaseActivity extends Activity implements BlueToot
 	}
 	
 	/**
-	 * ƒfƒoƒCƒX—š—ğ‚ğæ“¾Œã‚ÉŒÄ‚Ño‚³‚ê‚éƒƒ\ƒbƒh
-	 * mDevices‚Éæ“¾‚µ‚½—š—ğ‚ğ•Û‘¶
-	 * ŒÄ‚Ño‚³‚ê‚éƒ^ƒCƒ~ƒ“ƒOF
-	 * @‰ŠúBluetooth‚ªON‚Ì‚Æ‚« -> super.onCreate“à
-	 * @‰ŠúBluetooth‚ªNG‚Ìê‡‚ÅON‚É‚µ‚½‚Æ‚« -> super.onCreate -> sub.onCreate -> ... -> ‚±‚±I
-	 * @
+	 * ãƒ‡ãƒã‚¤ã‚¹å±¥æ­´ã‚’å–å¾—å¾Œã«å‘¼ã³å‡ºã•ã‚Œã‚‹ãƒ¡ã‚½ãƒƒãƒ‰
+	 * mDevicesã«å–å¾—ã—ãŸå±¥æ­´ã‚’ä¿å­˜
+	 * å‘¼ã³å‡ºã•ã‚Œã‚‹ã‚¿ã‚¤ãƒŸãƒ³ã‚°ï¼š
+	 * ã€€åˆæœŸBluetoothãŒONã®ã¨ã -> super.onCreateå†…
+	 * ã€€åˆæœŸBluetoothãŒNGã®å ´åˆã§ONã«ã—ãŸã¨ã -> super.onCreate -> sub.onCreate -> ... -> ã“ã“ï¼
+	 * ã€€
 	 */
 	abstract void didGetHistoryOfDevices();
 	
 	/**
-	 *  V‹KÚ‘±‚ÅƒoƒCƒX‚ğŒŸõ‚µ‚ÄŒ©‚Â‚©‚Á‚½ê‡‚ÉŒÄ‚Î‚ê‚éƒƒ\ƒbƒh
-	 *  ˆø”‚©‚çƒfƒoƒCƒXî•ñ‚ğæ“¾‰Â”\‚¾‚ªAmDevices“à‚É‚·‚Å‚É•Û‘¶‚³‚ê‚Ä‚¢‚é
+	 *  æ–°è¦æ¥ç¶šã§ãƒã‚¤ã‚¹ã‚’æ¤œç´¢ã—ã¦è¦‹ã¤ã‹ã£ãŸå ´åˆã«å‘¼ã°ã‚Œã‚‹ãƒ¡ã‚½ãƒƒãƒ‰
+	 *  å¼•æ•°ã‹ã‚‰ãƒ‡ãƒã‚¤ã‚¹æƒ…å ±ã‚’å–å¾—å¯èƒ½ã ãŒã€mDeviceså†…ã«ã™ã§ã«ä¿å­˜ã•ã‚Œã¦ã„ã‚‹
 	 *  in UI Thread;
 	 */
 	abstract void didDetectedDevice(String result, BluetoothDevice foundDevice); 
 	
 	/**
-	 *  ©•ª‚ÌƒfƒoƒCƒX‚ğŒŸõ‰Â”\‚É‚µ‚½‚ ‚ÆA
-	 *  ‚»‚ÌŒŸõ‚ª–³Œø‰»‚³‚ê‚½‚Æ‚«‚ÉŒÄ‚Ño‚³‚ê‚éƒƒ\ƒbƒh
+	 *  è‡ªåˆ†ã®ãƒ‡ãƒã‚¤ã‚¹ã‚’æ¤œç´¢å¯èƒ½ã«ã—ãŸã‚ã¨ã€
+	 *  ãã®æ¤œç´¢ãŒç„¡åŠ¹åŒ–ã•ã‚ŒãŸã¨ãã«å‘¼ã³å‡ºã•ã‚Œã‚‹ãƒ¡ã‚½ãƒƒãƒ‰
 	 *  in UI Thread;
 	 */
 	abstract void didDisableToBeSearched(); 
 	
 	/**
-	 *  ‘¼ƒfƒoƒCƒX‚©‚çŒŸõ‚³‚ê‚éİ’è‚ğ‹­§“I‚ÉƒLƒƒƒ“ƒZƒ‹‚ğÀ{
+	 *  ä»–ãƒ‡ãƒã‚¤ã‚¹ã‹ã‚‰æ¤œç´¢ã•ã‚Œã‚‹è¨­å®šã‚’å¼·åˆ¶çš„ã«ã‚­ãƒ£ãƒ³ã‚»ãƒ«ã‚’å®Ÿæ–½
 	 */
 	protected void cancelEnableFeatureSearchedByNearDevice(){
 		if(mBtAdapter == null){
@@ -85,16 +85,16 @@ public abstract class BlueToothBaseActivity extends Activity implements BlueToot
 	/**
 	 * (non-Javadoc)
 	 * @see android.app.Activity#onCreate(android.os.Bundle)
-	 * ‚±‚ÌƒNƒ‰ƒX‚Í•K‚¸Activity‹N“®‚ÉBlueTooth‚ª‹N“®‚µ‚Ä‚¢‚é‚©‚Ç‚¤‚©‚ğ”»’è‚·‚é
-	 * —LŒø‚É‚È‚Á‚Ä‚¢‚È‚¢ê‡‚ÍA—LŒø‚É‚·‚é‚½‚ß‚Ì—v‹‚ğ‚·‚é
-	 * —LŒø‚Èê‡‚à‚µ‚­‚Íƒ†[ƒU[‚ª—LŒø‚É‚µ‚½ê‡‚ÍAÚ‘±—š—ğ‚ğ•Û‘¶‚·‚é
+	 * ã“ã®ã‚¯ãƒ©ã‚¹ã¯å¿…ãšActivityèµ·å‹•æ™‚ã«BlueToothãŒèµ·å‹•ã—ã¦ã„ã‚‹ã‹ã©ã†ã‹ã‚’åˆ¤å®šã™ã‚‹
+	 * æœ‰åŠ¹ã«ãªã£ã¦ã„ãªã„å ´åˆã¯ã€æœ‰åŠ¹ã«ã™ã‚‹ãŸã‚ã®è¦æ±‚ã‚’ã™ã‚‹
+	 * æœ‰åŠ¹ãªå ´åˆã‚‚ã—ãã¯ãƒ¦ãƒ¼ã‚¶ãƒ¼ãŒæœ‰åŠ¹ã«ã—ãŸå ´åˆã¯ã€æ¥ç¶šå±¥æ­´ã‚’ä¿å­˜ã™ã‚‹
 	 */
 	@Override
 	protected void onCreate(Bundle savedInstanceState){
 		log("BlueToothBaseActivity onCreate");
 		super.onCreate(savedInstanceState);
 		/*
-		 *  setContentView‚ÍeƒNƒ‰ƒX‚Å—˜—p‚·‚é
+		 *  setContentViewã¯è¦ªã‚¯ãƒ©ã‚¹ã§åˆ©ç”¨ã™ã‚‹
 		 */
 		mActivity = this;
 		mContext = this.getApplicationContext();
@@ -126,7 +126,7 @@ public abstract class BlueToothBaseActivity extends Activity implements BlueToot
 		log("onActivityResult:" + requestCode + ":" + ResultCode);
 		if (requestCode == REQUEST_ACTIVITY_ENABLE_BLUETOOTH) {
 			if (ResultCode == Activity.RESULT_OK) {
-				// Bluetooth‚ªON‚É‚³‚ê‚½ê‡‚Ìˆ—
+				// BluetoothãŒONã«ã•ã‚ŒãŸå ´åˆã®å‡¦ç†
 				log("Bluetooth has been enabled");
 				getListOfUsersYouHaveConnected();
 				log(this.mDevices.toString());
@@ -146,12 +146,12 @@ public abstract class BlueToothBaseActivity extends Activity implements BlueToot
 	}
 	
 	/**
-	 * ‘¼‚ÌƒfƒoƒCƒX‚ğŒŸõ‚·‚éƒƒ\ƒbƒhB‚È‚¨—š—ğ‚É‚ ‚éê‡‚ÍA“o˜^‚µ‚È‚¢B
+	 * ä»–ã®ãƒ‡ãƒã‚¤ã‚¹ã‚’æ¤œç´¢ã™ã‚‹ãƒ¡ã‚½ãƒƒãƒ‰ã€‚ãªãŠå±¥æ­´ã«ã‚ã‚‹å ´åˆã¯ã€ç™»éŒ²ã—ãªã„ã€‚
 	 */
 	protected void searchNewDevices() {
 		log("searchNewDevices");
 
-		// ƒCƒ“ƒeƒ“ƒgƒtƒBƒ‹ƒ^[‚ÆBroadcastReceiver‚Ì“o˜^
+		// ã‚¤ãƒ³ãƒ†ãƒ³ãƒˆãƒ•ã‚£ãƒ«ã‚¿ãƒ¼ã¨BroadcastReceiverã®ç™»éŒ²
 		IntentFilter filter = new IntentFilter();
 		filter.addAction(BluetoothAdapter.ACTION_DISCOVERY_STARTED);
 		filter.addAction(BluetoothDevice.ACTION_FOUND);
@@ -167,9 +167,9 @@ public abstract class BlueToothBaseActivity extends Activity implements BlueToot
 	}
 	
 	/**
-	 * ©•ª‚ÌƒfƒoƒCƒX‚ğŒŸõ‘ÎÛ‚É‚·‚é
+	 * è‡ªåˆ†ã®ãƒ‡ãƒã‚¤ã‚¹ã‚’æ¤œç´¢å¯¾è±¡ã«ã™ã‚‹
 	 * @param 
-	 * time: —LŒøŠÔ(seconds)
+	 * time: æœ‰åŠ¹æ™‚é–“(seconds)
 	 */
 	protected void enableFeatureSearchedByNearDevice(int time) {
 		log("onDisablingFeatureSearchedByNearDevice");
@@ -179,12 +179,12 @@ public abstract class BlueToothBaseActivity extends Activity implements BlueToot
 	}
 	
 	/**
-	 * ƒNƒ‰ƒCƒAƒ“ƒg‚Æ‚µ‚Ä’ÊM‚ğŠJn‚·‚é‚½‚ß‚Ìƒƒ\ƒbƒh
-	 * Ú‘±—v‹‚µ‚½device‚ÆÚ‘±‚Å‚«‚½ê‡FdidBlueToothResultReceiver‚Å
+	 * ã‚¯ãƒ©ã‚¤ã‚¢ãƒ³ãƒˆã¨ã—ã¦é€šä¿¡ã‚’é–‹å§‹ã™ã‚‹ãŸã‚ã®ãƒ¡ã‚½ãƒƒãƒ‰
+	 * æ¥ç¶šè¦æ±‚ã—ãŸdeviceã¨æ¥ç¶šã§ããŸå ´åˆï¼šdidBlueToothResultReceiverã§
 	 *  - type		= BlueToothResultReceiver.Type.CONECT
 	 *  - isClient 	= true
-	 *  - result 	= ƒT[ƒo[‚Æ‚Ì’ÊM‚É•K—v‚ÈBluetoothSocket(¸”s‚Ínull)
-	 *  ‚Æ‚µ‚Ä•Ô‚Á‚Ä‚­‚é
+	 *  - result 	= ã‚µãƒ¼ãƒãƒ¼ã¨ã®é€šä¿¡ã«å¿…è¦ãªBluetoothSocket(å¤±æ•—æ™‚ã¯null)
+	 *  ã¨ã—ã¦è¿”ã£ã¦ãã‚‹
 	 */
 	protected void startConnectingAsClient(BluetoothDevice device){
 		log("startConnectingAsClient");
@@ -194,24 +194,24 @@ public abstract class BlueToothBaseActivity extends Activity implements BlueToot
 	}
 	
 	/**
-	 * ƒT[ƒo[‚Æ‚µ‚ÄƒNƒ‰ƒCƒAƒ“ƒg‚©‚ç‚ÌÚ‘±‚ğ‘Ò‚Â‚½‚ß‚Ìƒƒ\ƒbƒh
-	 * Ú‘±—v‹‚ªóM‚µ‚½ê‡FdidBlueToothResultReceiver‚Å
+	 * ã‚µãƒ¼ãƒãƒ¼ã¨ã—ã¦ã‚¯ãƒ©ã‚¤ã‚¢ãƒ³ãƒˆã‹ã‚‰ã®æ¥ç¶šã‚’å¾…ã¤ãŸã‚ã®ãƒ¡ã‚½ãƒƒãƒ‰
+	 * æ¥ç¶šè¦æ±‚ãŒå—ä¿¡ã—ãŸå ´åˆï¼šdidBlueToothResultReceiverã§
 	 *  - type		= BlueToothResultReceiver.Type.CONECT
 	 *  - isClient 	= false
-	 *  - result 	= ƒT[ƒo[‚Æ‚Ì’ÊM‚É•K—v‚ÈBluetoothSocket(¸”s‚Ínull)
-	 *  ‚Æ‚µ‚Ä•Ô‚Á‚Ä‚­‚é
+	 *  - result 	= ã‚µãƒ¼ãƒãƒ¼ã¨ã®é€šä¿¡ã«å¿…è¦ãªBluetoothSocket(å¤±æ•—æ™‚ã¯null)
+	 *  ã¨ã—ã¦è¿”ã£ã¦ãã‚‹
 	 */
 	protected void startConnectingAsServer() {
 		log("startConnectingAsServer");
 		mBtAdapter = BluetoothAdapter.getDefaultAdapter();
 		isClientDevice = false;
-		// ŒŸõ‘ÎÛ‚Æ‚È‚Á‚Ä‚¢‚È‚¢ê‡‚Ìˆ—
+		// æ¤œç´¢å¯¾è±¡ã¨ãªã£ã¦ã„ãªã„å ´åˆã®å‡¦ç†
 		BlueToothConnectionTask btask = new BlueToothConnectionTask(this, mBtAdapter, false, null, this);
 		btask.execute(new Object[] { null });
 	}
 	
 	/*
-	 * —š—ğ‚É‚È‚¢ƒfƒoƒCƒX‚ğ’T‚·‚½‚ß‚Ìƒƒ\ƒbƒh
+	 * å±¥æ­´ã«ãªã„ãƒ‡ãƒã‚¤ã‚¹ã‚’æ¢ã™ãŸã‚ã®ãƒ¡ã‚½ãƒƒãƒ‰
 	 */
 	private final BroadcastReceiver DevieFoundReceiver = new BroadcastReceiver() {
 		@Override
@@ -240,14 +240,14 @@ public abstract class BlueToothBaseActivity extends Activity implements BlueToot
 				// nonpairedList.setAdapter(nonPairedDeviceAdapter);
 			}
 			if (BluetoothDevice.ACTION_NAME_CHANGED.equals(action)) {
-				// –¼‘O‚ªŒŸo‚³‚ê‚½
+				// åå‰ãŒæ¤œå‡ºã•ã‚ŒãŸ
 				log("ACTION_NAME_CHANGED:" + dName);
 				foundDevice = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
 				if (foundDevice.getBondState() != BluetoothDevice.BOND_BONDED) {
-					log("Ú‘±‚µ‚½‚±‚Æ‚Ì‚È‚¢ƒfƒoƒCƒX:ACTION_NAME_CHANGED - " + dName);
+					log("æ¥ç¶šã—ãŸã“ã¨ã®ãªã„ãƒ‡ãƒã‚¤ã‚¹:ACTION_NAME_CHANGED - " + dName);
 					mDevices.addNewDevice(foundDevice);
 				} else {
-					log("Ú‘±‚µ‚½‚±‚Æ‚Ì‚ ‚éƒfƒoƒCƒX:ACTION_NAME_CHANGED - " + dName);
+					log("æ¥ç¶šã—ãŸã“ã¨ã®ã‚ã‚‹ãƒ‡ãƒã‚¤ã‚¹:ACTION_NAME_CHANGED - " + dName);
 				}
 				didDetectedDevice(BluetoothDevice.ACTION_NAME_CHANGED, foundDevice);
 			}
@@ -261,7 +261,7 @@ public abstract class BlueToothBaseActivity extends Activity implements BlueToot
 	};
 	
 	/*
-	 * log—pƒƒ\ƒbƒh
+	 * logç”¨ãƒ¡ã‚½ãƒƒãƒ‰
 	 */
 	private void log(String message){
 		Log.d(TAG, message);
@@ -279,7 +279,7 @@ public abstract class BlueToothBaseActivity extends Activity implements BlueToot
 		didGetHistoryOfDevices();
 	}
 	
-	// ’[––‚ªBlueTooth‚Ì‹@”\‚ğ‚Á‚Ä‚é‚©‚ğƒ`ƒFƒbƒN
+	// ç«¯æœ«ãŒBlueToothã®æ©Ÿèƒ½ã‚’æŒã£ã¦ã‚‹ã‹ã‚’ãƒã‚§ãƒƒã‚¯
 	private boolean hasBlueToothFeature(BluetoothAdapter Bt) {
 		if (Bt == null) {
 			Bt = BluetoothAdapter.getDefaultAdapter();
