@@ -3,7 +3,9 @@ package jp.kdy.partyapp;
 import java.io.IOException;
 
 import jp.kdy.bluetooth.ManagedDevices;
+import jp.kdy.bluetooth.ManagedDevices.KYDevice;
 import jp.kdy.partyapp.marubatsu.AppMaruBatsuActivity;
+import jp.kdy.util.MyFragmentDialog;
 
 import android.os.Bundle;
 import android.bluetooth.BluetoothAdapter;
@@ -11,12 +13,15 @@ import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.support.v4.app.DialogFragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
@@ -64,13 +69,28 @@ public class HomeActivity extends BlueToothBaseActivity {
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				if (mSocket == null) {
 					ListView listView = (ListView) parent;
-					BluetoothDevice item = (BluetoothDevice) listView.getItemAtPosition(position);
-					startConnectingAsClient(item);
-					Toast.makeText(mContext, "接続開始：" + item.getAddress(), Toast.LENGTH_SHORT).show();
+					KYDevice item = (KYDevice) listView.getItemAtPosition(position);
+					startConnectingAsClient(item.device);
+					Toast.makeText(mContext, "接続開始：" + item.device.getAddress(), Toast.LENGTH_SHORT).show();
 				} else {
 					closeSocket();
 				}
 			}
+		});
+		mDeviceList.setOnItemLongClickListener(new OnItemLongClickListener(){
+			@Override
+			public boolean onItemLongClick(AdapterView<?> parent, View arg1, int position, long id) {
+				if (mSocket == null) {
+					ListView listView = (ListView) parent;
+					KYDevice item = (KYDevice) listView.getItemAtPosition(position);
+					Toast.makeText(mContext, "対象：" + item.device.getAddress() + "("+ item.searchedRecently +")", Toast.LENGTH_SHORT).show();
+					// ダイアログを表示する
+			        DialogFragment newFragment = MyFragmentDialog.newInstanceForListDilog("title", "message");
+			        newFragment.show(getSupportFragmentManager(), "list_dialog");
+				} 
+				return false;
+			}
+			
 		});
 
 		mToggleButton = (ToggleButton) findViewById(R.id.toggleButton);
@@ -93,10 +113,17 @@ public class HomeActivity extends BlueToothBaseActivity {
 		if(mApp.mSocket != null){
 			this.mSocket = mApp.mSocket;
 		}
+		
+		if(KYUtils.DEBUG){
+			Button b = (Button)this.findViewById(R.id.buttonMaruBatsuGame);
+			if(b!=null) b.setEnabled(true);
+		}
 	}
 
 	public void onSearchDevice(View view) {
 		log("onSearchDevice");
+		Button b = (Button)view;
+		b.setText(this.getString(R.string.buttonText_to_searching_NearByMe));
 		this.searchNewDevices();
 	}
 
@@ -109,7 +136,7 @@ public class HomeActivity extends BlueToothBaseActivity {
 		}
 	}
 
-	public void onApp1Click(View view) {
+	public void onMaruBatsuGameClick(View view) {
 		log("AppMaruBatsuActivity");
 		if (isSocketWorking(mSocket)) {
 			Intent intent = new Intent(this.getApplicationContext(), AppMaruBatsuActivity.class);
@@ -127,6 +154,10 @@ public class HomeActivity extends BlueToothBaseActivity {
 
 	private boolean isSocketWorking(BluetoothSocket socket) {
 		boolean result = true;
+		
+		if(KYUtils.DEBUG)
+			return result;
+		
 		log(socket.toString());
 		if (socket == null) {
 			result = false;
@@ -160,7 +191,7 @@ public class HomeActivity extends BlueToothBaseActivity {
 		}
 
 		// Applicationの実行の禁止化
-		Button b = (Button) this.findViewById(R.id.app1Button);
+		Button b = (Button) this.findViewById(R.id.buttonMaruBatsuGame);
 		b.setEnabled(false);
 
 	}
@@ -193,6 +224,8 @@ public class HomeActivity extends BlueToothBaseActivity {
 		private class HolderView {
 			TextView name;
 			TextView address;
+			TextView status;
+			TextView date;
 		}
 
 		@Override
@@ -202,13 +235,28 @@ public class HomeActivity extends BlueToothBaseActivity {
 				convertView = mInflater.inflate(R.layout.list_device, null);
 				holder.name = (TextView) convertView.findViewById(R.id.deviceName);
 				holder.address = (TextView) convertView.findViewById(R.id.deviceAddress);
+				holder.status = (TextView) convertView.findViewById(R.id.deviceStatus);
+				holder.date = (TextView) convertView.findViewById(R.id.deviceDate);
 				convertView.setTag(holder);
 			} else {
 				holder = (HolderView) convertView.getTag();
 			}
-
-			holder.name.setText(((BluetoothDevice) getItem(position)).getName());
-			holder.address.setText(((BluetoothDevice) getItem(position)).getAddress());
+			
+			KYDevice kyDevice = (KYDevice)getItem(position);
+			holder.name.setText(kyDevice.device.getName());
+			holder.address.setText(kyDevice.device.getAddress());
+			holder.date.setText(kyDevice.connectedDate);
+			
+			if(kyDevice.isConnected){
+				holder.status.setText("接続済み");
+				holder.status.setTextColor(Color.RED);
+			}else{
+				if(kyDevice.searchedRecently){
+					holder.status.setText("接続可能");
+					holder.status.setTextColor(Color.BLUE);
+				}	
+			}
+			
 			return convertView;
 		}
 
@@ -241,6 +289,11 @@ public class HomeActivity extends BlueToothBaseActivity {
 			mDeviceList.invalidateViews();
 		} else if (BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(result)) {
 			log("ACTION_DISCOVERY_FINISHED:");
+			Button b = (Button)this.findViewById(R.id.buttonServer);
+			if(b!=null)
+				b.setText(getString(R.string.buttonText_to_search_NearByMe));
+			if(b!=null)
+				Toast.makeText(this, "端末の検索が終了しました", Toast.LENGTH_SHORT).show();
 		}
 		log(mDeviceList.toString());
 	}
@@ -250,7 +303,9 @@ public class HomeActivity extends BlueToothBaseActivity {
 		log("didDisableToBeSearched");
 		if (mToggleButton != null)
 			mToggleButton.setChecked(false);
-
+		Button b = (Button)this.findViewById(R.id.buttonServer);
+		if(b!=null)
+			b.setText(getString(R.string.buttonText_to_search_NearByMe));
 	}
 
 	@Override
@@ -261,13 +316,17 @@ public class HomeActivity extends BlueToothBaseActivity {
 		if (isCancel) {
 			Toast.makeText(this, "検索がキャンセルされました", Toast.LENGTH_LONG).show();
 		} else if (mSocket != null) {
+			BluetoothDevice device = mSocket.getRemoteDevice();
 			Toast.makeText(this, String.format("%sと接続しました", mSocket.getRemoteDevice()), Toast.LENGTH_LONG).show();
-			log("mSocket.getRemoteDevice();:" + mSocket.getRemoteDevice());
+			log("mSocket.getRemoteDevice();:" + device);
 			log("isConnected:" + mSocket.isConnected());
 			mApp.setBluetoothSocket(mSocket);
-			Button b = (Button) this.findViewById(R.id.app1Button);
+			Button b = (Button) this.findViewById(R.id.buttonMaruBatsuGame);
 			b.setEnabled(true);
 			this.mApp.parentPlayer = isClient;
+			this.mDevices.updateDeviceisConnected(device, true);
+			mDeviceList.invalidateViews();
+			
 		} else {
 			Toast.makeText(this, "指定した端末がみつかりませんでした", Toast.LENGTH_LONG).show();
 		}

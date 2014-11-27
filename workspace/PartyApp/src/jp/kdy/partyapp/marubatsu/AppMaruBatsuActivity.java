@@ -4,6 +4,7 @@ import jp.kdy.bluetooth.BlueToothMessageResultReceiver;
 import jp.kdy.bluetooth.InterChangeTask;
 import jp.kdy.bluetooth.InterChangeTask.BlueToothResult;
 import jp.kdy.partyapp.BlueToothBaseApplication;
+import jp.kdy.partyapp.KYUtils;
 import jp.kdy.partyapp.R;
 import jp.kdy.util.MyFragmentDialog;
 import android.app.Activity;
@@ -23,7 +24,6 @@ public class AppMaruBatsuActivity extends FragmentActivity implements BlueToothM
 
 	private static final String TAG = "AppMaruBatsuActivity";
 	// DEBUG時はBluetoothの通信を行わず、自分で○×両方をうつ
-	private static boolean DEBUG = false;
 
 	BlueToothBaseApplication mApp;
 	BluetoothSocket mSocket;
@@ -54,7 +54,7 @@ public class AppMaruBatsuActivity extends FragmentActivity implements BlueToothM
 		
 		mMyKindsTextView = (TextView)this.findViewById(R.id.textViewMaruBatsu);
 
-		if (DEBUG) {
+		if (KYUtils.DEBUG) {
 			mType = MyType.Maru;
 			hasPermissionToSet = true;
 			setmMyKindsTextView();
@@ -89,7 +89,6 @@ public class AppMaruBatsuActivity extends FragmentActivity implements BlueToothM
 	public void didBlueToothMessageResultReceiver(BlueToothResult result) {
 		log("didBlueToothResultReceiver:" + result);
 		TextView tv = null;
-		Button b = null;
 		switch (result.type) {
 		case SendSuccess:
 			Toast.makeText(this, result.toString(), Toast.LENGTH_LONG).show();
@@ -156,7 +155,7 @@ public class AppMaruBatsuActivity extends FragmentActivity implements BlueToothM
 
 		setMaruOrBatsu(i, j, mType);
 
-		if (!DEBUG) {
+		if (!KYUtils.DEBUG) {
 			hasPermissionToSet = false;
 			InterChangeTask ict = new InterChangeTask(mSocket, true, "" + i + j);
 			ict.setBlueToothReceiver(this);
@@ -172,7 +171,7 @@ public class AppMaruBatsuActivity extends FragmentActivity implements BlueToothM
 			setmMyKindsTextView();
 		}
 		
-		if (DEBUG) {
+		if (KYUtils.DEBUG) {
 			mType = this.enemyType();
 			hasPermissionToSet = true;
 			setmMyKindsTextView();

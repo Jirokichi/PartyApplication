@@ -22,8 +22,7 @@
         <activity
             android:name="jp.kdy.partyapp.HomeActivity"
             android:label="@string/app_name" >
-            
-              <intent-filter>
+            <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -31,12 +30,13 @@
             
         </activity>
         <activity
-            android:name="jp.kdy.partyapp.App1Activity"
+            android:name="jp.kdy.partyapp.ChatActivity"
             android:label="@string/app_name" >
         </activity>
         <activity
             android:name="jp.kdy.partyapp.marubatsu.AppMaruBatsuActivity"
             android:label="@string/app_name" >
+            
         </activity>
     </application>
 

@@ -13,7 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/waitForBeingAccessedByClientButton"
-        android:layout_below="@+id/app1Button"
+        android:layout_below="@+id/buttonMaruBatsuGame"
         android:choiceMode="singleChoice" >
     </ListView>
 
@@ -27,14 +27,14 @@
         android:text="クライアントからの接続待機" />
 
     <Button
-        android:id="@+id/app1Button"
+        android:id="@+id/buttonMaruBatsuGame"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/linearLayout"
         android:layout_centerHorizontal="true"
         android:enabled="false"
-        android:onClick="onApp1Click"
-        android:text="3ナンバーズ" />
+        android:onClick="onMaruBatsuGameClick"
+        android:text="○×ゲーム" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -49,7 +49,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:onClick="onSearchDevice"
-            android:text="サーバー検索" />
+            android:text="@string/buttonText_to_search_NearByMe" />
 
         <ToggleButton
             android:id="@+id/toggleButton"

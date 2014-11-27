@@ -10,40 +10,67 @@ import android.util.Log;
 
 public class ManagedDevices {
 
-	public ArrayList<BluetoothDevice> deviceInHistory = null;
+	public class KYDevice {
+		public KYDevice(BluetoothDevice device) {
+			this.device = device;
+		}
+
+		/*
+		 * デバイスの名前とBluetoothアドレスをもつインスタンス
+		 */
+		public BluetoothDevice device = null;
+		
+		/*
+		 * アプリを起動してからデバイス検索を実施して発見したデバイスかどうかの判定
+		 */
+		public boolean searchedRecently = false;
+		
+		/*
+		 * 通信を開始しているかどうか
+		 */
+		public boolean isConnected = false;
+		
+		/*
+		 * 最後に接続した日時
+		 */
+		public String connectedDate;
+		
+	}
+
+	public ArrayList<KYDevice> deviceInHistory = null;
 	public boolean hasDevicesHistory = false;
 	public int mSize = 0;
-	
+
 	@Override
-	public String toString(){
+	public String toString() {
 		String value = null;
-		value = "hasDevicesHistory(" + mSize + "):"+hasDevicesHistory;
+		value = "hasDevicesHistory(" + mSize + "):" + hasDevicesHistory;
 		value += "¥n";
-		if(deviceInHistory == null){
+		if (deviceInHistory == null) {
 			return value + "deviceInHistory = null";
 		}
-		
-		for(BluetoothDevice device:deviceInHistory){
-			value += device.getName() + ":" + device.getAddress();
+
+		for (KYDevice kydevice : deviceInHistory) {
+			value += kydevice.device.getName() + ":" + kydevice.device.getAddress() + ":" + kydevice.searchedRecently;
 		}
-		
+
 		return value;
 	}
-	
-	public ManagedDevices(){
-		deviceInHistory = new ArrayList<BluetoothDevice>();
+
+	public ManagedDevices() {
+		deviceInHistory = new ArrayList<KYDevice>();
 	}
-	
-	public void updateDeviceHistory(BluetoothAdapter bt){
+
+	public void updateDeviceHistory(BluetoothAdapter bt) {
 		setListOfUsersYouHaveConnected(bt);
 	}
-	
-	public void delete(){
-		if(deviceInHistory != null){
+
+	public void delete() {
+		if (deviceInHistory != null) {
 			deviceInHistory = null;
 		}
 	}
-	
+
 	// BluetoothAdapterから、接続履歴のあるデバイスの情報を取得
 	private void setListOfUsersYouHaveConnected(BluetoothAdapter bt) {
 		Set<BluetoothDevice> set = bt.getBondedDevices();
@@ -55,11 +82,11 @@ public class ManagedDevices {
 		} else {
 			while (iterator.hasNext()) {
 				BluetoothDevice device = iterator.next();
-				deviceInHistory.add(device);
+				KYDevice kydevice = new KYDevice(device);
+				deviceInHistory.add(kydevice);
 			}
 		}
 
-		
 		if (deviceInHistory.size() > 0) {
 			hasDevicesHistory = true;
 			mSize = deviceInHistory.size();
@@ -69,11 +96,36 @@ public class ManagedDevices {
 		}
 	}
 
-	public void addNewDevice(BluetoothDevice newDevice) {
-		if (deviceInHistory != null){
-			deviceInHistory.add(newDevice);
+	public void addNewDevice(BluetoothDevice newDevice, boolean recentSearched) {
+		if (deviceInHistory != null) {
+			KYDevice kyNewDevice = new KYDevice(newDevice);
+			kyNewDevice.searchedRecently = recentSearched;
+			deviceInHistory.add(kyNewDevice);
 			mSize++;
 		}
 	}
+
+	public void updateDeviceRecentSearched(BluetoothDevice device, boolean recentSearched) {
+		if (deviceInHistory != null) {
+			for (KYDevice kyDevice : deviceInHistory) {
+				if (kyDevice.device.getAddress().equals(device.getAddress())) {
+					kyDevice.searchedRecently = recentSearched;
+					break;
+				}
+			}
+		}
+	}
 	
+	public void updateDeviceisConnected(BluetoothDevice device, boolean isConnected) {
+		if (deviceInHistory != null) {
+			for (KYDevice kyDevice : deviceInHistory) {
+				if (kyDevice.device.getAddress().equals(device.getAddress())) {
+					kyDevice.isConnected = isConnected;
+					kyDevice.connectedDate = "2014/11/30";
+					break;
+				}
+			}
+		}
+	}
+
 }

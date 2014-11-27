@@ -5,6 +5,8 @@
     <string name="action_settings">Settings</string>
     <string name="hello_world">Hello world!</string>
     
+    <string name="buttonText_to_search_NearByMe">周囲のデバイス検索</string>
+    <string name="buttonText_to_searching_NearByMe">周囲のデバイス検索中...</string>
     
     <string name="Yes">はい</string>
     <string name="No">いいえ</string>

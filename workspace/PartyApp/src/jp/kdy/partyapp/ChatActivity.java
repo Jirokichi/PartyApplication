@@ -13,7 +13,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class App1Activity extends Activity implements BlueToothMessageResultReceiver {
+public class ChatActivity extends Activity implements BlueToothMessageResultReceiver {
 
 	private static final String TAG = "App1Activity";
 
@@ -25,7 +25,7 @@ public class App1Activity extends Activity implements BlueToothMessageResultRece
 		super.onCreate(savedInstanceState);
 		log("onCreate");
 
-		setContentView(R.layout.activity_app1);
+		setContentView(R.layout.activity_app_chat);
 
 		mApp = (BlueToothBaseApplication) this.getApplication();
 		mSocket = mApp.mSocket;

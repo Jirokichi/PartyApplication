@@ -15,10 +15,11 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.widget.Toast;
 
-public abstract class BlueToothBaseActivity extends Activity implements BlueToothConnectionResultReceiver {
+public abstract class BlueToothBaseActivity extends FragmentActivity implements BlueToothConnectionResultReceiver {
 
 	private static final String TAG = "BlueToothBaseActivity";
 	private static final int REQUEST_ACTIVITY_ENABLE_BLUETOOTH = 0;
@@ -221,12 +222,12 @@ public abstract class BlueToothBaseActivity extends Activity implements BlueToot
 			String dName = null;
 			BluetoothDevice foundDevice;
 			if (BluetoothAdapter.ACTION_DISCOVERY_STARTED.equals(action)) {
-				log("Start searching new devices...");
+				log("1. Start searching new devices...");
 				if(mActivity != null)
 					Toast.makeText(mActivity, "Start searching new devices...", Toast.LENGTH_LONG).show();
 			}
 			if (BluetoothDevice.ACTION_FOUND.equals(action)) {
-				log("Detext new device...");
+				log("2. Detext new device...");
 				foundDevice = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
 				if ((dName = foundDevice.getName()) != null) {
 					if (foundDevice.getBondState() != BluetoothDevice.BOND_BONDED) {
@@ -241,19 +242,20 @@ public abstract class BlueToothBaseActivity extends Activity implements BlueToot
 			}
 			if (BluetoothDevice.ACTION_NAME_CHANGED.equals(action)) {
 				// 名前が検出された
-				log("ACTION_NAME_CHANGED:" + dName);
+				log("3. ACTION_NAME_CHANGED:" + dName);
 				foundDevice = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
 				if (foundDevice.getBondState() != BluetoothDevice.BOND_BONDED) {
 					log("接続したことのないデバイス:ACTION_NAME_CHANGED - " + dName);
-					mDevices.addNewDevice(foundDevice);
+					mDevices.addNewDevice(foundDevice, true);
 				} else {
 					log("接続したことのあるデバイス:ACTION_NAME_CHANGED - " + dName);
+					mDevices.updateDeviceRecentSearched(foundDevice, true);
 				}
 				didDetectedDevice(BluetoothDevice.ACTION_NAME_CHANGED, foundDevice);
 			}
 
 			if (BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action)) {
-				log("Done searching new devices.");
+				log("4. Done searching new devices.");
 				didDetectedDevice(BluetoothAdapter.ACTION_DISCOVERY_FINISHED, null);
 			}
 			log("onReceive - fin");
