@@ -190,7 +190,9 @@ public abstract class BlueToothBaseActivity extends FragmentActivity implements 
 	protected void startConnectingAsClient(BluetoothDevice device){
 		log("startConnectingAsClient");
 		isClientDevice = true;
-		BlueToothConnectionTask btask = new BlueToothConnectionTask(this, mBtAdapter, true, device, this);
+		String title = String.format("%sの検索", device.getName());
+		String message = "検索中...";
+		BlueToothConnectionTask btask = new BlueToothConnectionTask(this, mBtAdapter, true, device, this, title, message);
 		btask.execute(new Object[] { null });
 	}
 	

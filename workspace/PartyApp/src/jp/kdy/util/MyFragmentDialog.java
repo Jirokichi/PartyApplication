@@ -13,7 +13,6 @@ import android.widget.Toast;
 // 参考サイト:http://d.hatena.ne.jp/sakura_bird1/20130207/1360193574
 public class MyFragmentDialog extends DialogFragment {
 	protected static final String TAG = "MyFragmentDialog";
-	private DialogInterface.OnClickListener listener = null;
 
 	// ダイアログタイプ用パラメー保存キー
 	private static String bundle_key_dialog_type = "DIALOG_TYPE";
@@ -26,6 +25,60 @@ public class MyFragmentDialog extends DialogFragment {
 	public enum TYPE {
 		JUST_CONFIRMATION_DIALOG, NORMAL_DIALOG, LIST_DIALOG
 	};
+
+	// ダイアログのyesボタン押下時のリスナー
+	private DialogInterface.OnClickListener mButtonListner = null;
+
+	/**
+	 * ボタンのリスナーを追加する
+	 * 
+	 * @param buttonListner
+	 */
+	public void setDialogListener(DialogInterface.OnClickListener buttonListner) {
+		this.mButtonListner = buttonListner;
+	}
+
+	/**
+	 * ボタンのリスナーを削除する
+	 */
+	public void removeDialogListener() {
+		this.mButtonListner = null;
+	}
+	
+
+	// リストダイアログのパラメータ
+	private String[] mItems = null;
+	DialogInterface.OnClickListener mListListener;
+
+	/**
+	 * リストの表示文字とリスナー登録
+	 * 
+	 * @param items
+	 * @param listListener
+	 */
+	public void setListParameter(final String[] items, DialogInterface.OnClickListener listListener) {
+		this.mItems = items;
+		this.mListListener = listListener;
+	}
+
+	/**
+	 * フラグメントのインスタンス作成後に、show(getSupportFragmentManager(), "list_dialog")を実施すると呼び出される
+	 */
+	@Override
+	public Dialog onCreateDialog(Bundle savedInstanceState) {
+
+		TYPE dialogType = TYPE.valueOf(getArguments().getString(bundle_key_dialog_type));
+		switch (dialogType) {
+		case NORMAL_DIALOG:
+			return createNormalDialog(savedInstanceState);
+		case JUST_CONFIRMATION_DIALOG:
+			return createConfirmDialog(savedInstanceState);
+		case LIST_DIALOG:
+			return createListDialog(savedInstanceState);
+		default:
+			return null;
+		}
+	}
 
 	/**
 	 * 確認用のダイアログを作成する。作成されるダイアログはボタンを一つした持たず、onNegativeClickのみ利用する。
@@ -84,23 +137,12 @@ public class MyFragmentDialog extends DialogFragment {
 		return frag;
 	}
 
-	@Override
-	public Dialog onCreateDialog(Bundle savedInstanceState) {
-
-		TYPE dialogType = TYPE.valueOf(getArguments().getString(bundle_key_dialog_type));
-		switch (dialogType) {
-		case NORMAL_DIALOG:
-			return createNormalDialog(savedInstanceState);
-		case JUST_CONFIRMATION_DIALOG:
-			return createConfirmDialog(savedInstanceState);
-		case LIST_DIALOG:
-			return createListDialog(savedInstanceState);
-		default:
-			return null;
-		}
-	}
-
-	// ボタン２つのダイアログ
+	/**
+	 * ボタン２つのダイアログ
+	 * 
+	 * @param savedInstanceState
+	 * @return
+	 */
 	private Dialog createNormalDialog(Bundle savedInstanceState) {
 		String title = getArguments().getString(bundle_key_title);
 		String dialogMessage = getArguments().getString(bundle_key_message);
@@ -108,15 +150,20 @@ public class MyFragmentDialog extends DialogFragment {
 		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 		builder.setTitle(title);
 		builder.setMessage(dialogMessage);
-		if (this.listener == null) {
+		if (this.mButtonListner == null) {
 			log("Not Set this listner yet.");
 		}
-		builder.setPositiveButton(getString(R.string.Yes), this.listener);
-		builder.setNegativeButton(getString(R.string.No), this.listener);
+		builder.setPositiveButton(getString(R.string.Yes), this.mButtonListner);
+		builder.setNegativeButton(getString(R.string.No), this.mButtonListner);
 		return builder.create();
 	}
 
-	// ボタンが一つだけ
+	/**
+	 * ボタンが一つだけの確認ダイアログ
+	 * 
+	 * @param savedInstanceState
+	 * @return
+	 */
 	private Dialog createConfirmDialog(Bundle savedInstanceState) {
 		String title = getArguments().getString(bundle_key_title);
 		String dialogMessage = getArguments().getString(bundle_key_message);
@@ -124,65 +171,31 @@ public class MyFragmentDialog extends DialogFragment {
 		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 		builder.setTitle(title);
 		builder.setMessage(dialogMessage);
-		if (this.listener == null) {
+		if (this.mButtonListner == null) {
 			log("Not Set this listner yet.");
 		}
-		builder.setPositiveButton(getString(R.string.Yes), this.listener);
+		builder.setPositiveButton(getString(R.string.Yes), this.mButtonListner);
 		return builder.create();
 	}
 
-	// ボタンが一つだけ
+	/**
+	 * リストダイアログ
+	 * 
+	 * @param savedInstanceState
+	 * @return
+	 */
 	private Dialog createListDialog(Bundle savedInstanceState) {
 		String title = getArguments().getString(bundle_key_title);
-		String dialogMessage = getArguments().getString(bundle_key_message);
-
-		CharSequence[] items = {"使い方", "よくある質問", "メール", "閉じる"};
-		
 		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 		builder.setTitle(title);
-		//builder.setMessage(dialogMessage);
-		if (this.listener == null) {
+		if (this.mButtonListner == null) {
 			log("Not Set this listner yet.");
 		}
-		final Activity activity = getActivity();
-		builder.setItems(items, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                switch (which) {
-                    case 0:
-                        Toast.makeText(activity, "使い方が押された", Toast.LENGTH_LONG).show();
-                        break;
-                    case 1:
-                        Toast.makeText(activity, "よくある質問が押された", Toast.LENGTH_LONG).show();
-                        break;
-                    case 2:
-                        Toast.makeText(activity, "メールが押された", Toast.LENGTH_LONG).show();
-                        break;
-                    case 3:
-                        Toast.makeText(activity, "閉じる", Toast.LENGTH_LONG).show();
-                        break;
-                    default:
-                        break;
-                }
-            }
-        });
-//		builder.setPositiveButton(getString(R.string.Yes), this.listener);
+
+		if (this.mListListener != null) {
+			builder.setItems(mItems, this.mListListener);
+		}
 		return builder.create();
-	}
-
-	/**
-	 * リスナーを追加する
-	 * 
-	 * @param listener
-	 */
-	public void setDialogListener(DialogInterface.OnClickListener listener) {
-		this.listener = listener;
-	}
-
-	/**
-	 * リスナーを削除する
-	 */
-	public void removeDialogListener() {
-		this.listener = null;
 	}
 
 	private void log(String message) {

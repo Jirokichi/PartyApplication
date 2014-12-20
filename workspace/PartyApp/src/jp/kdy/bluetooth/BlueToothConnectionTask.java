@@ -36,6 +36,9 @@ public class BlueToothConnectionTask extends AsyncTask<Object, Integer, Bluetoot
     
     ProgressDialog progressDialog;
 
+    private String mTitle = "Please wait";
+    private String mMessage = "Loading data...";
+    
 	public BlueToothConnectionTask(Context context, BluetoothAdapter btAdapter, boolean isClient, BluetoothDevice device, BlueToothConnectionResultReceiver receiver) {
 		Log.d(TAG, "BlueToothAsyncTask()");
 		this.mContext = context;
@@ -45,20 +48,34 @@ public class BlueToothConnectionTask extends AsyncTask<Object, Integer, Bluetoot
 		this.mReceiver = receiver;
 	}
 
+	public BlueToothConnectionTask(Context context, BluetoothAdapter btAdapter, boolean isClient, BluetoothDevice device, BlueToothConnectionResultReceiver receiver, String title, String message) {
+		Log.d(TAG, "BlueToothAsyncTask()");
+		this.mContext = context;
+		mDevice = device;
+		myBlueToothAdapter = btAdapter;
+		this.isClient = isClient;
+		this.mReceiver = receiver;
+		if(mTitle != null){
+			mTitle = title;
+		}
+		if(mMessage != null){
+			mMessage = message;
+		}
+	}
+	
 	@Override
 	protected void onPreExecute() {
 		// This method is in UI Thread
 		Log.d(TAG, "onPreExecute");
 		
-//		if(!isClient){
-			progressDialog = new ProgressDialog(mContext);
-			progressDialog.setTitle("Please wait");
-			progressDialog.setMessage("Loading data...");
-			progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-			progressDialog.setCancelable(true);
-			progressDialog.setOnCancelListener(this);
-			progressDialog.show();
-//		}
+		progressDialog = new ProgressDialog(mContext);
+		
+		progressDialog.setTitle(mTitle);
+		progressDialog.setMessage(mMessage);
+		progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+		progressDialog.setCancelable(true);
+		progressDialog.setOnCancelListener(this);
+		progressDialog.show();
 		
 		
 	}
