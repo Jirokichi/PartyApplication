@@ -4,6 +4,7 @@ import jp.kdy.partyapp.R;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -20,10 +21,11 @@ public class MyFragmentDialog extends DialogFragment {
 	// ツイート用パラメー保存キー
 	private static String bundle_key_title = "TITLE";
 	private static String bundle_key_message = "MESSAGE";
+	private static String bundle_key_listener = "LISTENER";
 
 	// ダイアログタイプ
 	public enum TYPE {
-		JUST_CONFIRMATION_DIALOG, NORMAL_DIALOG, LIST_DIALOG
+		JUST_CONFIRMATION_DIALOG, NORMAL_DIALOG, LIST_DIALOG, PROGRESS_DIALOG
 	};
 
 	// ダイアログのyesボタン押下時のリスナー
@@ -75,6 +77,8 @@ public class MyFragmentDialog extends DialogFragment {
 			return createConfirmDialog(savedInstanceState);
 		case LIST_DIALOG:
 			return createListDialog(savedInstanceState);
+		case PROGRESS_DIALOG:
+			return createProgressDialog(savedInstanceState);
 		default:
 			return null;
 		}
@@ -136,6 +140,25 @@ public class MyFragmentDialog extends DialogFragment {
 		frag.setArguments(bundle);
 		return frag;
 	}
+	
+	/**
+	 * プログレスダイアログを作成する。作成されるダイアログはキャンセルボタンだけをもつ
+	 * 
+	 * @param title
+	 *            　タイトル
+	 * @param diaogMessage
+	 *            　メッセージ
+	 * @return
+	 */
+	public static MyFragmentDialog newInstanceForProgressDilog(String title, String diaogMessage) {
+		MyFragmentDialog frag = new MyFragmentDialog();
+		Bundle bundle = new Bundle();
+		bundle.putString(bundle_key_dialog_type, TYPE.PROGRESS_DIALOG.name());
+		bundle.putString(bundle_key_title, title);
+		bundle.putString(bundle_key_message, diaogMessage);
+		frag.setArguments(bundle);
+		return frag;
+	}
 
 	/**
 	 * ボタン２つのダイアログ
@@ -176,6 +199,29 @@ public class MyFragmentDialog extends DialogFragment {
 		}
 		builder.setPositiveButton(getString(R.string.Yes), this.mButtonListner);
 		return builder.create();
+	}
+	
+	/**
+	 * キャンセルボタンが一つだけのプログレスダイアログ(処理中)
+	 * 
+	 * @param savedInstanceState
+	 * @return
+	 */
+	private Dialog createProgressDialog(Bundle savedInstanceState) {
+		String title = getArguments().getString(bundle_key_title);
+		String dialogMessage = getArguments().getString(bundle_key_message);
+		
+		ProgressDialog progressDialog = new ProgressDialog(getActivity());
+        progressDialog.setTitle(title);
+        progressDialog.setMessage(dialogMessage);
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progressDialog.setCanceledOnTouchOutside(false);
+        setCancelable(false);
+        if (this.mButtonListner == null) {
+			log("Not Set this listner yet.");
+		}
+        progressDialog.setButton(DialogInterface.BUTTON_NEGATIVE, getString(R.string.Cancel), this.mButtonListner);
+        return progressDialog;
 	}
 
 	/**

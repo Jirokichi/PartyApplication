@@ -1,12 +1,13 @@
 package jp.kdy.bluetooth;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.Set;
 
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
-import android.util.Log;
+import static jp.kdy.partyapp.KYUtils.*;
 
 public class ManagedDevices {
 
@@ -117,11 +118,16 @@ public class ManagedDevices {
 	}
 	
 	public void updateDeviceisConnected(BluetoothDevice device, boolean isConnected) {
-		if (deviceInHistory != null) {
+		if (deviceInHistory != null && device != null) {
 			for (KYDevice kyDevice : deviceInHistory) {
 				if (kyDevice.device.getAddress().equals(device.getAddress())) {
 					kyDevice.isConnected = isConnected;
-					kyDevice.connectedDate = "2014/11/30";
+					if(isConnected){
+						String tmp = (String) android.text.format.DateFormat.format("yyyy/MM/dd", new Date());
+						log(tmp);
+						kyDevice.connectedDate = tmp;
+						kyDevice.searchedRecently = true;
+					}
 					break;
 				}
 			}

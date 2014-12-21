@@ -12,7 +12,7 @@ public class BlueToothBaseApplication extends Application {
 
 	private static final String TAG = "BlueToothBaseApplication";
 	public BluetoothSocket mSocket;
-	public boolean parentPlayer;
+	public boolean parentPlayer = false;
 	
 	@Override
 	public void onCreate(){

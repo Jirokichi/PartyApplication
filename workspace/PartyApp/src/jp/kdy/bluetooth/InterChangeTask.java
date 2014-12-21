@@ -6,13 +6,11 @@ import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 
 import android.bluetooth.BluetoothSocket;
-import android.content.Context;
 import android.os.AsyncTask;
-import android.util.Log;
+
+import static jp.kdy.partyapp.KYUtils.*;
 
 public class InterChangeTask extends AsyncTask<Object, Object, InterChangeTask.BlueToothResult> {
-
-	private static final String TAG = "InterChangeTask";
 
 	public static InputStream in = null;
 	public static OutputStream out = null;
@@ -22,9 +20,11 @@ public class InterChangeTask extends AsyncTask<Object, Object, InterChangeTask.B
 
 	private String sendMessage = null;
 
+	// 結果の種類
 	public enum ResultType {
 		SendSuccess, ReceiveSuccess, Exception, Cancel
 	};
+	
 
 	public class BlueToothResult {
 		public String resultMessage = null;
@@ -82,7 +82,7 @@ public class InterChangeTask extends AsyncTask<Object, Object, InterChangeTask.B
 
 		BlueToothResult result = null;
 		// こちらから情報を送信する場合
-		if(mSocket == null || !mSocket.isConnected()){
+		if(mSocket == null /*|| !mSocket.isConnected()*/){
 			result = new BlueToothResult();
 			result.type = ResultType.Exception;
 			result.resultMessage = "Socket is invalie";
@@ -142,7 +142,6 @@ public class InterChangeTask extends AsyncTask<Object, Object, InterChangeTask.B
 		result.type = ResultType.ReceiveSuccess;
 		return result;
 	}
-
 	@Override
 	protected void onPostExecute(BlueToothResult result) {
 		if (this.isCancelled()) {
@@ -153,8 +152,12 @@ public class InterChangeTask extends AsyncTask<Object, Object, InterChangeTask.B
 		this.mReceiver.didBlueToothMessageResultReceiver(result);
 	}
 
+	/**
+	 * task.cancel(true)されたときに呼び出されるメソッド
+	 */
 	@Override
 	public void onCancelled() {
+		log("onCancelled()");
 		BlueToothResult result = new BlueToothResult();
 		result.resultMessage = "Cancel";
 		result.type = ResultType.Cancel;
@@ -175,10 +178,6 @@ public class InterChangeTask extends AsyncTask<Object, Object, InterChangeTask.B
 		}
 
 		this.mReceiver.didBlueToothMessageResultReceiver(result);
-	}
-
-	private void log(String message) {
-		Log.d(TAG, message);
 	}
 
 }

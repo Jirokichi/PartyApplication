@@ -10,5 +10,6 @@
     
     <string name="Yes">はい</string>
     <string name="No">いいえ</string>
+    <string name="Cancel">キャンセル</string>
 
 </resources>

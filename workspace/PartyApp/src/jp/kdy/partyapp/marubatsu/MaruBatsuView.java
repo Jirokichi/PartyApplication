@@ -15,6 +15,12 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
+/**
+ * ○×ゲームの盤面
+ * 
+ * @author yuya
+ * 
+ */
 public class MaruBatsuView extends View {
 
 	private static final String TAG = "MaruBatsuView";
@@ -35,7 +41,6 @@ public class MaruBatsuView extends View {
 
 	MyTouchListener mListner;
 
-	
 	public MaruBatsuView(Context context) {
 		super(context);
 	}
@@ -83,21 +88,12 @@ public class MaruBatsuView extends View {
 	 * @param w
 	 *            , h, oldw, oldh
 	 */
+	@Override
 	protected void onSizeChanged(int w, int h, int oldw, int oldh) {
 		log("onSizeChanged Width:" + w + ",Height:" + h);
 		mWidth = w;
 		mHeight = h;
-		// キャンバス作成
-		mBitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
-		mCanvas = new Canvas(mBitmap);
-		mBitmapTmp = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
-		mCavasTmp = new Canvas(mBitmapTmp);
-
-		mCanvas.drawRect(new Rect(0 + STROLE_WIDTH / 2, 0 + STROLE_WIDTH / 2, w - STROLE_WIDTH / 2, w - STROLE_WIDTH / 2), mPaint);
-		mCanvas.drawLine(w * 1 / 3, 0, w * 1 / 3, w, mPaint);
-		mCanvas.drawLine(w * 2 / 3, 0, w * 2 / 3, w, mPaint);
-		mCanvas.drawLine(0, w * 1 / 3, w, w * 1 / 3, mPaint);
-		mCanvas.drawLine(0, w * 2 / 3, w, w * 2 / 3, mPaint);
+		resetView();
 	}
 
 	private void drawMaru(Canvas canvas, Paint paint, int i, int j, int length) {
@@ -156,6 +152,39 @@ public class MaruBatsuView extends View {
 		return true;
 	}
 
+	/**
+	 * 画面を初期状態に戻す
+	 */
+	public void resetView() {
+		// キャンバス作成
+		int w = mWidth;
+		int h = mHeight;
+		
+		
+		
+		if(mCanvas != null){
+			mCanvas.setBitmap(null);
+			if(mBitmap != null){
+				mBitmap.recycle();
+				mBitmap = null;
+			}
+		}
+		
+		mBitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
+		
+		if(mCanvas == null){
+			mCanvas = new Canvas(mBitmap);
+			mBitmapTmp = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
+			mCavasTmp = new Canvas(mBitmapTmp);
+		}
+		
+		mCanvas.drawRect(new Rect(0 + STROLE_WIDTH / 2, 0 + STROLE_WIDTH / 2, w - STROLE_WIDTH / 2, w - STROLE_WIDTH / 2), mPaint);
+		mCanvas.drawLine(w * 1 / 3, 0, w * 1 / 3, w, mPaint);
+		mCanvas.drawLine(w * 2 / 3, 0, w * 2 / 3, w, mPaint);
+		mCanvas.drawLine(0, w * 1 / 3, w, w * 1 / 3, mPaint);
+		mCanvas.drawLine(0, w * 2 / 3, w, w * 2 / 3, mPaint);
+	}
+
 	/* 描画関数 */
 	@Override
 	protected void onDraw(Canvas canvas) {
@@ -178,13 +207,13 @@ public class MaruBatsuView extends View {
 
 		if ((i < 3 && i >= 0) && (j < 3 && j >= 0)) {
 			MyType type = mListner.checkPermission(i, j);
-			if(type != MyType.No_Permission){
+			if (type != MyType.No_Permission) {
 				pointXY = i * 10 + j;
 				isTouching = true;
 				log(String.format("(%d, %d)", i, j));
-				if(type == MyType.Batsu)
+				if (type == MyType.Batsu)
 					this.drawBatsu(mCavasTmp, mPaint, i, j, mWidth);
-				else if(type == MyType.Maru)
+				else if (type == MyType.Maru)
 					this.drawMaru(mCavasTmp, mPaint, i, j, mWidth);
 			}
 		}

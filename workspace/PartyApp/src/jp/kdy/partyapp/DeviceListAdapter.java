@@ -74,6 +74,9 @@ public class DeviceListAdapter extends BaseAdapter {
 			if (kyDevice.searchedRecently) {
 				holder.status.setText("接続可能");
 				holder.status.setTextColor(Color.BLUE);
+			}else{
+				holder.status.setText("未接続");
+				holder.status.setTextColor(Color.BLACK);
 			}
 		}
 
