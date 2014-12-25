@@ -19,6 +19,7 @@ public class InterChangeTask extends AsyncTask<Object, Object, InterChangeTask.B
 	private boolean isSender = false;
 
 	private String sendMessage = null;
+	private final String SEND_SUCCESS_MESSAGE = "Send_Success";
 
 	// 結果の種類
 	public enum ResultType {
@@ -112,7 +113,7 @@ public class InterChangeTask extends AsyncTask<Object, Object, InterChangeTask.B
 			return result;
 		}
 		
-		result.resultMessage = "Send Success";
+		result.resultMessage = SEND_SUCCESS_MESSAGE;
 		result.type = ResultType.SendSuccess;
 		return result;
 	}

@@ -1,5 +1,7 @@
 package jp.kdy.partyapp;
 
+import static jp.kdy.partyapp.KYUtils.log;
+
 import java.util.ArrayList;
 
 import jp.kdy.bluetooth.BlueToothConnectionTask;
@@ -9,6 +11,7 @@ import jp.kdy.bluetooth.ManagedDevices;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothSocket;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -211,6 +214,34 @@ public abstract class BlueToothBaseActivity extends FragmentActivity implements 
 		// 検索対象となっていない場合の処理
 		BlueToothConnectionTask btask = new BlueToothConnectionTask(this, mBtAdapter, false, null, this);
 		btask.execute(new Object[] { null });
+	}
+	
+	/**
+	 * Socketが有効かどうかを判定するメソッド
+	 * 
+	 * @param socket
+	 * @return
+	 */
+	protected boolean isSocketWorking(BluetoothSocket socket) {
+		boolean result = true;
+
+		if (KYUtils.DEBUG)
+			return result;
+
+		if (socket == null) {
+			result = false;
+		}
+
+		log(socket.toString());
+		// else {
+		// isConnected()は接続確認をしたデバイスがある場合trueなだけで、現在も通信可能かどうかを保障しないため
+		// log("socket.isConnected():" + socket.isConnected());
+		// if (!socket.isConnected()) {
+		// result = false;
+		// } else {
+		// }
+		// }
+		return result;
 	}
 	
 	/*

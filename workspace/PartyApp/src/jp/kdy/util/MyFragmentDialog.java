@@ -1,5 +1,7 @@
 package jp.kdy.util;
 
+import java.io.Serializable;
+
 import jp.kdy.partyapp.R;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -23,29 +25,27 @@ public class MyFragmentDialog extends DialogFragment {
 	private static String bundle_key_message = "MESSAGE";
 	private static String bundle_key_listener = "LISTENER";
 
+	// リスナー
+	private MyDialogListener listener; // リスナー用の変数です
+    public interface MyDialogListener extends Serializable{
+        public void onClicked(DialogInterface dialog, int which, String tag);
+    }
+    public void removeListener(){
+    	listener = null;
+    }
+    final MyFragmentDialog mDialog = this;
+    DialogInterface.OnClickListener dialogListener = new DialogInterface.OnClickListener(){
+        @Override
+        public void onClick(DialogInterface dialog, int which){
+        	log("");
+        	listener.onClicked(dialog, which, mDialog.getTag());
+        }
+     };
+    
 	// ダイアログタイプ
 	public enum TYPE {
 		JUST_CONFIRMATION_DIALOG, NORMAL_DIALOG, LIST_DIALOG, PROGRESS_DIALOG
 	};
-
-	// ダイアログのyesボタン押下時のリスナー
-	private DialogInterface.OnClickListener mButtonListner = null;
-
-	/**
-	 * ボタンのリスナーを追加する
-	 * 
-	 * @param buttonListner
-	 */
-	public void setDialogListener(DialogInterface.OnClickListener buttonListner) {
-		this.mButtonListner = buttonListner;
-	}
-
-	/**
-	 * ボタンのリスナーを削除する
-	 */
-	public void removeDialogListener() {
-		this.mButtonListner = null;
-	}
 	
 
 	// リストダイアログのパラメータ
@@ -64,41 +64,23 @@ public class MyFragmentDialog extends DialogFragment {
 	}
 
 	/**
-	 * フラグメントのインスタンス作成後に、show(getSupportFragmentManager(), "list_dialog")を実施すると呼び出される
-	 */
-	@Override
-	public Dialog onCreateDialog(Bundle savedInstanceState) {
-
-		TYPE dialogType = TYPE.valueOf(getArguments().getString(bundle_key_dialog_type));
-		switch (dialogType) {
-		case NORMAL_DIALOG:
-			return createNormalDialog(savedInstanceState);
-		case JUST_CONFIRMATION_DIALOG:
-			return createConfirmDialog(savedInstanceState);
-		case LIST_DIALOG:
-			return createListDialog(savedInstanceState);
-		case PROGRESS_DIALOG:
-			return createProgressDialog(savedInstanceState);
-		default:
-			return null;
-		}
-	}
-
-	/**
 	 * 確認用のダイアログを作成する。作成されるダイアログはボタンを一つした持たず、onNegativeClickのみ利用する。
 	 * 
 	 * @param title
 	 *            　タイトル
 	 * @param diaogMessage
 	 *            　メッセージ
+	 * @param myListener
+	 *   			MyDialogListener
 	 * @return
 	 */
-	public static MyFragmentDialog newInstanceForJustConfirmationDilog(String title, String diaogMessage) {
+	public static MyFragmentDialog newInstanceForJustConfirmationDilog(String title, String diaogMessage, MyDialogListener myListener) {
 		MyFragmentDialog frag = new MyFragmentDialog();
 		Bundle bundle = new Bundle();
 		bundle.putString(bundle_key_dialog_type, TYPE.JUST_CONFIRMATION_DIALOG.name());
 		bundle.putString(bundle_key_title, title);
 		bundle.putString(bundle_key_message, diaogMessage);
+		bundle.putSerializable(bundle_key_listener, myListener);
 		frag.setArguments(bundle);
 		return frag;
 	}
@@ -112,12 +94,13 @@ public class MyFragmentDialog extends DialogFragment {
 	 *            　メッセージ
 	 * @return
 	 */
-	public static MyFragmentDialog newInstanceForNormalDilog(String title, String diaogMessage) {
+	public static MyFragmentDialog newInstanceForNormalDilog(String title, String diaogMessage, MyDialogListener myListener) {
 		MyFragmentDialog frag = new MyFragmentDialog();
 		Bundle bundle = new Bundle();
 		bundle.putString(bundle_key_dialog_type, TYPE.NORMAL_DIALOG.name());
 		bundle.putString(bundle_key_title, title);
 		bundle.putString(bundle_key_message, diaogMessage);
+		bundle.putSerializable(bundle_key_listener, myListener);
 		frag.setArguments(bundle);
 		return frag;
 	}
@@ -150,16 +133,38 @@ public class MyFragmentDialog extends DialogFragment {
 	 *            　メッセージ
 	 * @return
 	 */
-	public static MyFragmentDialog newInstanceForProgressDilog(String title, String diaogMessage) {
+	public static MyFragmentDialog newInstanceForProgressDilog(String title, String diaogMessage, MyDialogListener myListener) {
 		MyFragmentDialog frag = new MyFragmentDialog();
 		Bundle bundle = new Bundle();
 		bundle.putString(bundle_key_dialog_type, TYPE.PROGRESS_DIALOG.name());
 		bundle.putString(bundle_key_title, title);
 		bundle.putString(bundle_key_message, diaogMessage);
+		bundle.putSerializable(bundle_key_listener, myListener);
 		frag.setArguments(bundle);
 		return frag;
 	}
 
+	/**
+	 * フラグメントのインスタンス作成後に、show(getSupportFragmentManager(), "list_dialog")を実施すると呼び出される
+	 */
+	@Override
+	public Dialog onCreateDialog(Bundle savedInstanceState) {
+
+		TYPE dialogType = TYPE.valueOf(getArguments().getString(bundle_key_dialog_type));
+		switch (dialogType) {
+		case NORMAL_DIALOG:
+			return createNormalDialog(savedInstanceState);
+		case JUST_CONFIRMATION_DIALOG:
+			return createConfirmDialog(savedInstanceState);
+		case LIST_DIALOG:
+			return createListDialog(savedInstanceState);
+		case PROGRESS_DIALOG:
+			return createProgressDialog(savedInstanceState);
+		default:
+			return null;
+		}
+	}
+	
 	/**
 	 * ボタン２つのダイアログ
 	 * 
@@ -173,11 +178,11 @@ public class MyFragmentDialog extends DialogFragment {
 		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 		builder.setTitle(title);
 		builder.setMessage(dialogMessage);
-		if (this.mButtonListner == null) {
-			log("Not Set this listner yet.");
-		}
-		builder.setPositiveButton(getString(R.string.Yes), this.mButtonListner);
-		builder.setNegativeButton(getString(R.string.No), this.mButtonListner);
+		// リスナーを設定
+        listener = (MyDialogListener)getArguments().getSerializable(bundle_key_listener);
+		builder.setPositiveButton(getString(R.string.Yes),dialogListener);
+		builder.setNegativeButton(getString(R.string.No), dialogListener);
+		
 		return builder.create();
 	}
 
@@ -194,10 +199,9 @@ public class MyFragmentDialog extends DialogFragment {
 		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 		builder.setTitle(title);
 		builder.setMessage(dialogMessage);
-		if (this.mButtonListner == null) {
-			log("Not Set this listner yet.");
-		}
-		builder.setPositiveButton(getString(R.string.Yes), this.mButtonListner);
+		// リスナーを設定
+        listener = (MyDialogListener)getArguments().getSerializable(bundle_key_listener);
+		builder.setPositiveButton(getString(R.string.Yes), dialogListener);
 		return builder.create();
 	}
 	
@@ -217,10 +221,8 @@ public class MyFragmentDialog extends DialogFragment {
         progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         progressDialog.setCanceledOnTouchOutside(false);
         setCancelable(false);
-        if (this.mButtonListner == null) {
-			log("Not Set this listner yet.");
-		}
-        progressDialog.setButton(DialogInterface.BUTTON_NEGATIVE, getString(R.string.Cancel), this.mButtonListner);
+        listener = (MyDialogListener)getArguments().getSerializable(bundle_key_listener);
+        progressDialog.setButton(DialogInterface.BUTTON_NEGATIVE, getString(R.string.Cancel), dialogListener);
         return progressDialog;
 	}
 
@@ -234,10 +236,6 @@ public class MyFragmentDialog extends DialogFragment {
 		String title = getArguments().getString(bundle_key_title);
 		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 		builder.setTitle(title);
-		if (this.mButtonListner == null) {
-			log("Not Set this listner yet.");
-		}
-
 		if (this.mListListener != null) {
 			builder.setItems(mItems, this.mListListener);
 		}

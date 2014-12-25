@@ -1,5 +1,7 @@
 package jp.kdy.partyapp.marubatsu;
 
+import static jp.kdy.partyapp.KYUtils.log;
+
 import java.io.IOException;
 
 import jp.kdy.bluetooth.BlueToothMessageResultReceiver;
@@ -9,13 +11,12 @@ import jp.kdy.partyapp.BlueToothBaseApplication;
 import jp.kdy.partyapp.KYUtils;
 import jp.kdy.partyapp.R;
 import jp.kdy.util.MyFragmentDialog;
+import jp.kdy.util.MyFragmentDialog.MyDialogListener;
 import android.app.Application;
 import android.bluetooth.BluetoothSocket;
 import android.content.DialogInterface;
-import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Config;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,14 +24,24 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class AppMaruBatsuFragment extends Fragment implements BlueToothMessageResultReceiver, MyTouchListener, OnClickListener {
+public class AppMaruBatsuFragment extends Fragment implements BlueToothMessageResultReceiver, MyTouchListener{
 
-	private static final String TAG = "AppMaruBatsuFragment";
 	// DEBUG時はBluetoothの通信を行わず、自分で○×両方をうつ
-
 	BlueToothBaseApplication mApp;
 	BluetoothSocket mSocket;
 
+	/**
+	 * フラグメントに関する定義
+	 */
+	MyDialogListener mListener = new MyDialogListener(){
+		private static final long serialVersionUID = 1L;
+		@Override
+		public void onClicked(DialogInterface dialog, int which, String tag) {
+			log(String.format("%s, %s, %s", dialog, which, tag));
+			onClickedAfterGame(dialog, which, tag);
+		}
+	};
+	
 	/**
 	 *  盤面の状況を管理するためのインスタンス(ここが大きくなる場合はクラスにまとめるべき)
 	 */
@@ -132,8 +143,7 @@ public class AppMaruBatsuFragment extends Fragment implements BlueToothMessageRe
 			if (judgeWinner(enemyType())) {
 				log("Loser");
 
-				MyFragmentDialog dialog = MyFragmentDialog.newInstanceForNormalDilog("勝敗", "あなたの負けです。対戦を続ける場合は「はい」を押してください");
-				dialog.setDialogListener(this);
+				MyFragmentDialog dialog = MyFragmentDialog.newInstanceForNormalDilog("勝敗", "あなたの負けです。対戦を続ける場合は「はい」を押してください", mListener);
 				dialog.show(this.getFragmentManager(), "MyFragmentDialog");
 				hasPermissionToSet = false;
 				if(mMyKindsTextView != null)
@@ -184,8 +194,7 @@ public class AppMaruBatsuFragment extends Fragment implements BlueToothMessageRe
 		// すべて埋まっているかのチェックを実施し、その後勝敗を決定する
 		if (judgeWinner(mType)) {
 			log("Winner");
-			MyFragmentDialog dialog = MyFragmentDialog.newInstanceForNormalDilog("勝敗", "あなたの勝ちです。対戦を続ける場合は「はい」を押してください。");
-			dialog.setDialogListener(this);
+			MyFragmentDialog dialog = MyFragmentDialog.newInstanceForNormalDilog("勝敗", "あなたの勝ちです。対戦を続ける場合は「はい」を押してください。", mListener);
 			dialog.show(getFragmentManager(), "MyFragmentDialog");
 		}else{
 			setmMyKindsTextView();
@@ -295,9 +304,8 @@ public class AppMaruBatsuFragment extends Fragment implements BlueToothMessageRe
 	/**
 	 * 勝敗決定後のダイアログでボタンを押した際のイベント
 	 */
-	@Override
-	public void onClick(DialogInterface dialog, int which) {
-		log("onClick:" + dialog);
+	public void onClickedAfterGame(DialogInterface dialog, int which, String tag) {
+		log("onClick:" + dialog + ":" + tag);
 		switch (which){
 		case DialogInterface.BUTTON_POSITIVE:
 			// 対戦を続ける場合
@@ -323,9 +331,4 @@ public class AppMaruBatsuFragment extends Fragment implements BlueToothMessageRe
 				break;
 		}
 	}
-	
-	private void log(String message) {
-		Log.d(TAG, message);
-	}
-
 }

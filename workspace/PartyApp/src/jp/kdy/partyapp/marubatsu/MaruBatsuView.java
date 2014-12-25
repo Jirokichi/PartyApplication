@@ -11,10 +11,9 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Rect;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-
+import static jp.kdy.partyapp.KYUtils.*;
 /**
  * ○×ゲームの盤面
  * 
@@ -22,8 +21,6 @@ import android.view.View;
  * 
  */
 public class MaruBatsuView extends View {
-
-	private static final String TAG = "MaruBatsuView";
 
 	private static int STROLE_WIDTH = 12;
 
@@ -250,9 +247,5 @@ public class MaruBatsuView extends View {
 			i++;
 		}
 		return i;
-	}
-
-	private void log(String message) {
-		Log.d(TAG, message);
 	}
 }
