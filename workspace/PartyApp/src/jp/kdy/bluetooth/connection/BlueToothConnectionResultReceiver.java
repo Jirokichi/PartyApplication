@@ -1,6 +1,5 @@
-package jp.kdy.bluetooth;
+package jp.kdy.bluetooth.connection;
 
-import jp.kdy.bluetooth.InterChangeTask.BlueToothResult;
 import android.bluetooth.BluetoothSocket;
 
 public interface BlueToothConnectionResultReceiver {

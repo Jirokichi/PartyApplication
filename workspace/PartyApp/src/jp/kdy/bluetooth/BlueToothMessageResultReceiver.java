@@ -1,6 +1,7 @@
 package jp.kdy.bluetooth;
 
-import jp.kdy.bluetooth.InterChangeTask.BlueToothResult;
+import jp.kdy.bluetooth.communication.CommunicationTask.BlueToothResult;
+
 
 
 public interface BlueToothMessageResultReceiver {

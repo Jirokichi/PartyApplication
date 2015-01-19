@@ -3,10 +3,11 @@ package jp.kdy.partyapp;
 import java.io.IOException;
 
 import jp.kdy.bluetooth.BlueToothMessageResultReceiver;
-import jp.kdy.bluetooth.InterChangeTask;
-import jp.kdy.bluetooth.InterChangeTask.BlueToothResult;
 import jp.kdy.bluetooth.ManagedDevices;
 import jp.kdy.bluetooth.ManagedDevices.KYDevice;
+import jp.kdy.bluetooth.communication.CommunicationReceiverTask;
+import jp.kdy.bluetooth.communication.CommunicationSenderTask;
+import jp.kdy.bluetooth.communication.CommunicationTask.BlueToothResult;
 import jp.kdy.partyapp.marubatsu.AppMaruBatsuActivity;
 import jp.kdy.util.MyFragmentDialog;
 import jp.kdy.util.MyFragmentDialog.MyDialogListener;
@@ -42,25 +43,24 @@ public class HomeActivity extends BlueToothBaseActivity implements BlueToothMess
 	 */
 	private void closeSocket() {
 		BluetoothDevice device = null;
-		if(mSocket != null){
+		if (mSocket != null) {
 			device = mSocket.getRemoteDevice();
 		}
-		
+
 		if (mContext != null) {
 			String message = null;
 			if (KYUtils.DEBUG) {
 				message = "**";
 			} else {
-				if(device!=null){
+				if (device != null) {
 					message = device.toString();
-				}
-				else{
+				} else {
 					message = "他の端末";
 				}
 			}
 			Toast.makeText(mContext, String.format("%sとの接続を切断しました", message), Toast.LENGTH_LONG).show();
 		}
-		
+
 		if (mSocket != null) {
 			try {
 				mSocket.close();
@@ -82,11 +82,11 @@ public class HomeActivity extends BlueToothBaseActivity implements BlueToothMess
 		// Applicationの実行の禁止化
 		disableAppsButton();
 	}
-	
+
 	/**
 	 * アプリ開始ボタンの無効化
 	 */
-	private void disableAppsButton(){
+	private void disableAppsButton() {
 		Button b = (Button) this.findViewById(R.id.buttonMaruBatsuGame);
 		if (b != null) {
 			b.setEnabled(false);
@@ -101,16 +101,28 @@ public class HomeActivity extends BlueToothBaseActivity implements BlueToothMess
 	private ToggleButton mToggleButton;
 
 	private MyFragmentDialog mWaitForSelectionOfClientDialog = null;
-	InterChangeTask mWaitForSelectionOfClientTask = null;
+	//InterChangeTask mWaitForMessageTask = null;
+	CommunicationReceiverTask receiverTask = null;
 
-	private static final String FRAGMENT_DIALOG_FOR_WAIT = "progress_dialog";
-	private static final String FRAGMENT_DIALOG_FOR_SELECTION_OF_APP = "confirm_dialog";
-	// アプリ起動用
-	private static enum AppName {MaruBatsuGame, Game2};
-	
-	//startActivity用
-	private static enum ActivityNumber {ACTIVITY_MARUBATSU, ACTIVITY_HATENA}; 
-	
+	/**
+	 * フラグメントのタグ。onClickedメソッドなどで呼び出しもとを判定するために利用。
+	 * 
+	 * @author yuya DIALOG_TO_WAIT_APPS_SELECTION_OF_PAERENT : 親がアプリを選択するのを待つための待機ダイアログ用のタグ DIALOG_TO_CONFIRM_SELECTION_OF_APP_BY_PAERENT : 親がアプリを選択した際の確認ダイアログ用のタグ
+	 */
+	private static enum FragmentTag {
+		DIALOG_TO_WAIT_APPS_SELECTION_OF_PAERENT, DIALOG_TO_CONFIRM_SELECTION_OF_APP_BY_PAERENT
+	};
+
+	/**
+	 * 親が子に送信するアプリ起動前の確認メッセージ。子は受信するメッセージに応じたアプリを起動する。
+	 * 
+	 * @author yuya
+	 * 
+	 */
+	private static enum AppName {
+		MaruBatsuGame, Game2
+	};
+
 	/**
 	 * 処理中ダイアログ(クライアントのアプリ選択待ち)を閉じるときの処理
 	 */
@@ -122,15 +134,15 @@ public class HomeActivity extends BlueToothBaseActivity implements BlueToothMess
 	}
 
 	/**
-	 * クライアントのアプリ選択待ち状態を終了するときの処理
+	 * クライアントによるアプリ選択の待機状態を終了するときの処理
 	 */
-	private void finishWaitForSelectionOfClientTask() {
-		if (mWaitForSelectionOfClientTask != null) {
+	private void finishWaitForMessageTask() {
+		if (receiverTask != null) {
 			// キャンセルが実施されるとdidBlueToothMessageResultReceiverが呼び出される
-			if (!mWaitForSelectionOfClientTask.isCancelled()) {
-				mWaitForSelectionOfClientTask.cancel(true);
+			if (!receiverTask.isCancelled()) {
+				receiverTask.cancel(true);
 			}
-			mWaitForSelectionOfClientTask = null;
+			receiverTask = null;
 		}
 	}
 
@@ -138,9 +150,12 @@ public class HomeActivity extends BlueToothBaseActivity implements BlueToothMess
 	protected void onDestroy() {
 		super.onDestroy();
 		log("onDestroy");
+		// Socketクローズ
 		closeSocket();
+		// 待機ウィンドウクローズ
 		finishWaitForSlectionOfClientDialog();
-		finishWaitForSelectionOfClientTask();
+		// 待機タスククローズ
+		finishWaitForMessageTask();
 	}
 
 	@Override
@@ -150,7 +165,7 @@ public class HomeActivity extends BlueToothBaseActivity implements BlueToothMess
 		mApp = (BlueToothBaseApplication) this.getApplication();
 
 		setContentView(R.layout.activity_home);
-		
+
 		// 端末リストについて
 		mDeviceList = (ListView) this.findViewById(R.id.deviceList);
 		mDeviceList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -196,10 +211,9 @@ public class HomeActivity extends BlueToothBaseActivity implements BlueToothMess
 				newFragment.show(getSupportFragmentManager(), "list_dialog");
 				return true;
 			}
-		});		
+		});
 		dAdapter = new DeviceListAdapter(this.getApplicationContext(), this.mDevices);
 		mDeviceList.setAdapter(dAdapter);
-
 
 		// たぐるボタンについて
 		mToggleButton = (ToggleButton) findViewById(R.id.toggleButton);
@@ -216,7 +230,6 @@ public class HomeActivity extends BlueToothBaseActivity implements BlueToothMess
 			}
 		});
 
-		
 		// すでにsocket接続がある場合
 		if (mApp.mSocket != null) {
 			this.mSocket = mApp.mSocket;
@@ -272,7 +285,7 @@ public class HomeActivity extends BlueToothBaseActivity implements BlueToothMess
 				message = String.format("%sと対戦しますか？", mSocket.getRemoteDevice().getName());
 			}
 			MyFragmentDialog dialog = MyFragmentDialog.newInstanceForNormalDilog("アプリ起動", message, this);
-			dialog.show(this.getSupportFragmentManager(), FRAGMENT_DIALOG_FOR_SELECTION_OF_APP);
+			dialog.show(this.getSupportFragmentManager(), FragmentTag.DIALOG_TO_CONFIRM_SELECTION_OF_APP_BY_PAERENT.name());
 		} else {
 			if (mSocket != null) {
 				Toast.makeText(this, String.format("すでに%sとの接続が切れています", mSocket.getRemoteDevice()), Toast.LENGTH_SHORT).show();
@@ -283,8 +296,6 @@ public class HomeActivity extends BlueToothBaseActivity implements BlueToothMess
 		}
 
 	}
-
-	
 
 	@Override
 	protected void didGetHistoryOfDevices() {
@@ -332,20 +343,22 @@ public class HomeActivity extends BlueToothBaseActivity implements BlueToothMess
 
 	/**
 	 * ListViewの中でDeviceと同じレコードの状態をisConectedに変更
+	 * 
 	 * @param device
 	 * @param devices
 	 * @param listView
 	 * @param isConected
-	 * 	リスト上の接続あり、未接続のメッセージ
+	 *            リスト上の接続あり、未接続のメッセージ
 	 */
-	private void changeStatus(BluetoothDevice device, ManagedDevices deices, ListView listView, boolean isConected){
+	private void changeStatus(BluetoothDevice device, ManagedDevices deices, ListView listView, boolean isConected) {
 		log("mSocket.getRemoteDevice();:" + device);
 		deices.updateDeviceisConnected(device, isConected);
 		listView.invalidateViews();
 	}
+
 	@Override
 	public void didBlueToothConnectionResultReceiver(BluetoothSocket result, boolean isClient, boolean isCancel) {
-		// 
+		//
 		log("didBlueToothResultReceiver" + "(" + isClient + "):" + result);
 		mSocket = result;
 
@@ -357,53 +370,96 @@ public class HomeActivity extends BlueToothBaseActivity implements BlueToothMess
 			log("isConnected:" + mSocket.isConnected());
 			changeStatus(mSocket.getRemoteDevice(), mDevices, mDeviceList, true);
 			this.mApp.parentPlayer = isClient;
-			
-			if(isClient){
+
+			if (isClient) {
 				// クライアントの場合はアプリを有効化
 				Button b = (Button) this.findViewById(R.id.buttonMaruBatsuGame);
 				b.setEnabled(true);
-			}else{
+			} else {
 				// クライアントではない場合、ダイアログで待機
 				// 待機用ダイアログを生成
-				mWaitForSelectionOfClientDialog = MyFragmentDialog.newInstanceForProgressDilog("待機中", "クライアントがアプリを選択するまでしばらくおまちください...", this);
-				mWaitForSelectionOfClientDialog.show(getSupportFragmentManager(), FRAGMENT_DIALOG_FOR_WAIT);
+				mWaitForSelectionOfClientDialog = MyFragmentDialog.newInstanceForProgressDilog("待機中", "親がアプリを選択するまでしばらくおまちください...", this);
+				mWaitForSelectionOfClientDialog.show(getSupportFragmentManager(), FragmentTag.DIALOG_TO_WAIT_APPS_SELECTION_OF_PAERENT.name());
 
 				// クライアントからの送信待機
-				mWaitForSelectionOfClientTask = new InterChangeTask(mSocket, false, null);
-				mWaitForSelectionOfClientTask.setBlueToothReceiver(this);
-				mWaitForSelectionOfClientTask.execute(new Object[] { "Wait=" + mSocket + ")" });
+				receiverTask = new CommunicationReceiverTask(mSocket, this);
+				receiverTask.execute(new Object[] { "Wait=" + mSocket + ")" });
 			}
 
 		} else {
-			Toast.makeText(this, "指定した端末がみつかりませんでした", Toast.LENGTH_LONG).show();
+			Toast.makeText(this, "指定した端末がみつかりませんでした", Toast.LENGTH_SHORT).show();
 		}
 	}
 
 	@Override
 	public void didBlueToothMessageResultReceiver(BlueToothResult result) {
+		/**
+		 * このクラスでは、このメソッドは以下の条件のときに呼び出される 1. 親がアプリを選択し、そのアプリ名を子に送信した後 2. 子がアプリ名を受信したとき 3. 子がアプリ名を送信したとき 4. 親がアプリ名を受信したとき
+		 * 
+		 * [備考：アプリ起動までの流れ] 親: アプリ名送信 > 子が本当に現在もアプリ起動中か確認するためメッセージが帰ってくるのを待機 > アプリ名受信 > アプリ起動 子: 親のアプリ選択を待機 > アプリ名受信 > アプリ名送信 > アプリ起動
+		 */
+		log(String.format("result(client[%s]):%s", isClientDevice, result.toString()));
+		Toast.makeText(this, result.toString(), Toast.LENGTH_LONG).show();
+
+		if (isClientDevice) {
+			this.didBlueToothMessageResultReceiverForClient(result);
+		} else {
+			this.didBlueToothMessageResultReceiverForNotClient(result);
+		}
+	}
+
+	private void didBlueToothMessageResultReceiverForNotClient(BlueToothResult result) {
 		String message = null;
 		switch (result.type) {
 		case SendSuccess:
-			Toast.makeText(this, result.toString(), Toast.LENGTH_LONG).show();
+			finishWaitForSlectionOfClientDialog();
+			finishWaitForMessageTask();
 			startGame();
 			break;
 		case ReceiveSuccess:
-			Toast.makeText(this, result.toString(), Toast.LENGTH_LONG).show();
 			message = result.resultMessage;
-			if(message.equals(AppName.MaruBatsuGame.name())){
+			if (message.equals(AppName.MaruBatsuGame.name())) {
+				finishWaitForMessageTask();
+				CommunicationSenderTask ict = new CommunicationSenderTask(mSocket, this, AppName.MaruBatsuGame.name());
+				ict.execute(new Object[] { "Send=" + mSocket + ")" });
+			}
+			break;
+		case Exception:
+		case Cancel:
+			// 例外は相手がSocketを閉じた場合発生する場合があるため、その場合ダイアログを閉じてあげる必要がある
+			finishWaitForSlectionOfClientDialog();
+			finishWaitForMessageTask();
+			closeSocket();
+			break;
+		default:
+			break;
+		}
+	}
+
+	private void didBlueToothMessageResultReceiverForClient(BlueToothResult result) {
+		String message = null;
+		switch (result.type) {
+		case SendSuccess:
+			// 　子から準備完了通知を待つ
+			finishWaitForMessageTask();
+			receiverTask = new CommunicationReceiverTask(mSocket, this);
+			receiverTask.execute(new Object[] { "Wait=" + mSocket + ")" });
+			break;
+		case ReceiveSuccess:
+			// 子から準備完了通知(アプリ名)を取得した場合のみゲーム開始
+			message = result.resultMessage;
+			if (message.equals(AppName.MaruBatsuGame.name())) {
 				finishWaitForSlectionOfClientDialog();
+				finishWaitForMessageTask();
 				startGame();
 			}
 			break;
 		case Exception:
-			Toast.makeText(this, result.toString(), Toast.LENGTH_LONG).show();
+		case Cancel:
 			// 例外は相手がSocketを閉じた場合発生する場合があるため、その場合ダイアログを閉じてあげる必要がある
 			finishWaitForSlectionOfClientDialog();
-			finishWaitForSelectionOfClientTask();
+			finishWaitForMessageTask();
 			closeSocket();
-			break;
-		case Cancel:
-			Toast.makeText(this, result.toString(), Toast.LENGTH_LONG).show();
 			break;
 		default:
 			break;
@@ -411,39 +467,47 @@ public class HomeActivity extends BlueToothBaseActivity implements BlueToothMess
 	}
 
 	/**
-	 *  ゲームを開始する
+	 * ゲームを開始する
 	 */
 	private void startGame() {
 		Intent intent = new Intent(this.getApplicationContext(), AppMaruBatsuActivity.class);
-		startActivityForResult(intent, ActivityNumber.ACTIVITY_MARUBATSU.ordinal());
+		startActivityForResult(intent, ActivityRequestCode.ACTIVITY_MARUBATSU.ordinal());
 	}
-	
+
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		if(requestCode == ActivityNumber.ACTIVITY_MARUBATSU.ordinal()){
+		super.onActivityResult(requestCode, resultCode, data);
+		log(String.format("(requestCode, resultCode, data)=(%s, %s, %s)", requestCode, resultCode, data));
+		if (requestCode == ActivityRequestCode.ACTIVITY_MARUBATSU.ordinal()) {
+			log("○×ゲームから戻ってきた場合");
 			onMaruBatsuActivityResult(resultCode, data);
 		}
 	}
-	
-	private void onMaruBatsuActivityResult(int resultCode, Intent data){
+
+	private void onMaruBatsuActivityResult(int resultCode, Intent data) {
 		log(String.format("resultCode(%s):%s", resultCode, data));
 		log(String.format("mSocket:%s", mSocket));
-		if(isSocketWorking(mSocket)){
+		if (isSocketWorking(mSocket)) {
 			changeStatus(mSocket.getRemoteDevice(), mDevices, this.mDeviceList, false);
 			closeSocket();
 		}
-		
+
 		this.disableAppsButton();
 	}
-	
+
 	/**
 	 * appNameのゲーム開始を他のデバイスに伝える
+	 * 
 	 * @param tag
 	 */
-	private void sendStartAppToOtherDevice(String tag){
-		if(tag.equals(FRAGMENT_DIALOG_FOR_SELECTION_OF_APP)){
-			InterChangeTask ict = new InterChangeTask(mSocket, true, AppName.MaruBatsuGame.name());
-			ict.setBlueToothReceiver(this);
+	private void sendStartAppToOtherDevice(String tag) {
+		if (tag.equals(FragmentTag.DIALOG_TO_CONFIRM_SELECTION_OF_APP_BY_PAERENT.name())) {
+
+			// 待機用ダイアログを生成
+			mWaitForSelectionOfClientDialog = MyFragmentDialog.newInstanceForProgressDilog("待機中", "アプリ起動中...", this);
+			mWaitForSelectionOfClientDialog.show(getSupportFragmentManager(), FragmentTag.DIALOG_TO_WAIT_APPS_SELECTION_OF_PAERENT.name());
+
+			CommunicationSenderTask ict = new CommunicationSenderTask(mSocket, this, AppName.MaruBatsuGame.name());
 			ict.execute(new Object[] { "Send=" + mSocket + ")" });
 		}
 	}
@@ -451,17 +515,17 @@ public class HomeActivity extends BlueToothBaseActivity implements BlueToothMess
 	@Override
 	public void onClicked(DialogInterface dialog, int which, String tag) {
 		log(String.format("%s, %s, %s", dialog, which, tag));
-		if (tag.equals(FRAGMENT_DIALOG_FOR_SELECTION_OF_APP)) {
+		if (tag.equals(FragmentTag.DIALOG_TO_CONFIRM_SELECTION_OF_APP_BY_PAERENT.name())) {
 			if (which == DialogInterface.BUTTON_POSITIVE) {
 				sendStartAppToOtherDevice(tag);
 			}
-		} else if (tag.equals(FRAGMENT_DIALOG_FOR_WAIT)) {
+		} else if (tag.equals(FragmentTag.DIALOG_TO_WAIT_APPS_SELECTION_OF_PAERENT.name())) {
 			// サーバーがクライアントがアプリを選択するのを待機中のときに利用
 			if (which == DialogInterface.BUTTON_NEGATIVE) {
 				// キャンセルされたとき
 				log(String.format("キャンセル"));
 				finishWaitForSlectionOfClientDialog();
-				finishWaitForSelectionOfClientTask();
+				finishWaitForMessageTask();
 				closeSocket();
 			}
 		}

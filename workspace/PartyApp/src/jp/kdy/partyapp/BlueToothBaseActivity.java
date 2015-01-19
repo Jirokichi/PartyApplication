@@ -4,9 +4,11 @@ import static jp.kdy.partyapp.KYUtils.log;
 
 import java.util.ArrayList;
 
-import jp.kdy.bluetooth.BlueToothConnectionTask;
-import jp.kdy.bluetooth.BlueToothConnectionResultReceiver;
 import jp.kdy.bluetooth.ManagedDevices;
+import jp.kdy.bluetooth.connection.BlueToothConnectionForReceiveTask;
+import jp.kdy.bluetooth.connection.BlueToothConnectionForSendTask;
+import jp.kdy.bluetooth.connection.BlueToothConnectionResultReceiver;
+import jp.kdy.bluetooth.connection.BlueToothConnectionTask;
 
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
@@ -19,17 +21,15 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
-import android.util.Log;
 import android.widget.Toast;
 
 public abstract class BlueToothBaseActivity extends FragmentActivity implements BlueToothConnectionResultReceiver {
-
-	private static final String TAG = "BlueToothBaseActivity";
-	private static final int REQUEST_ACTIVITY_ENABLE_BLUETOOTH = 0;
-	private static final int REQUEST_ACTIVITY_ENABLE_SEARCHED = 1;
 	
+	//startActivity用(継承する場合はこの値を再定義する必要がある)
+	protected static enum ActivityRequestCode {ENABLE_BLUETOOTH, ENABLE_SEARCHED, ACTIVITY_MARUBATSU, ACTIVITY_HATENA}; 
+		
 	// クラインアントかどうかのフラグ
-	boolean isClientDevice = true;
+	protected boolean isClientDevice = false;
 	protected ManagedDevices mDevices = null;
 	
 	BluetoothAdapter mBtAdapter = null;
@@ -115,20 +115,23 @@ public abstract class BlueToothBaseActivity extends FragmentActivity implements 
 			} else {
 				log("please enable bluetooth");
 				Intent btOn = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-				startActivityForResult(btOn, REQUEST_ACTIVITY_ENABLE_BLUETOOTH);
+				startActivityForResult(btOn, ActivityRequestCode.ENABLE_BLUETOOTH.ordinal());
 			}
 		} else {
 			log("This device does not support bluetooth");
 		}
-		
-		
-		
 	}
 	
+	/**
+	 *　他のアクティビティから戻ってきた際に呼び出されるメソッド
+	 *　このクラス(BleuToothBaseActivity)を継承するアクティビティでもonActivityResultを定義する場合は、
+	 *　そのメソッド内でsuperで呼び出す必要と、requestCodeがかぶらないようにする必要がある。
+	 */
 	@Override
 	protected void onActivityResult(int requestCode, int ResultCode, Intent date) {
-		log("onActivityResult:" + requestCode + ":" + ResultCode);
-		if (requestCode == REQUEST_ACTIVITY_ENABLE_BLUETOOTH) {
+		log(String.format("(requestCode, resultCode, data)=(%s, %s, %s)", requestCode, ResultCode, date));
+		if (requestCode == ActivityRequestCode.ENABLE_BLUETOOTH.ordinal()) {
+			log("Bluetoothを有効にするためのダイアログから戻ってきた場合");
 			if (ResultCode == Activity.RESULT_OK) {
 				// BluetoothがONにされた場合の処理
 				log("Bluetooth has been enabled");
@@ -138,7 +141,8 @@ public abstract class BlueToothBaseActivity extends FragmentActivity implements 
 				log("Bluetooth is not enabled yet");
 				Toast.makeText(this, "Bluetooth is not enabled yet", Toast.LENGTH_LONG).show();
 			}
-		}else if(requestCode == REQUEST_ACTIVITY_ENABLE_SEARCHED){
+		}else if(requestCode == ActivityRequestCode.ENABLE_SEARCHED.ordinal()){
+			log("Bluetoothが有効になっている近くの端末を検索するためのダイアログから戻ってきた場合");
 			if (ResultCode <= 0) {
 				log("Cancel");
 				didDisableToBeSearched();
@@ -179,28 +183,31 @@ public abstract class BlueToothBaseActivity extends FragmentActivity implements 
 		log("onDisablingFeatureSearchedByNearDevice");
 		Intent discoverableOn = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
 		discoverableOn.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, time);
-		this.startActivityForResult(discoverableOn, REQUEST_ACTIVITY_ENABLE_SEARCHED);
+		this.startActivityForResult(discoverableOn, ActivityRequestCode.ENABLE_SEARCHED.ordinal());
 	}
 	
 	/**
-	 * クライアントとして通信を開始するためのメソッド
-	 * 接続要求したdeviceと接続できた場合：didBlueToothResultReceiverで
+	 * クライアント(ここでは親機)として他の端末との通信を確立するためのメソッド
+	 * 接続要求を出したdeviceと接続できた場合：didBlueToothResultReceiverメソッドで
 	 *  - type		= BlueToothResultReceiver.Type.CONECT
 	 *  - isClient 	= true
 	 *  - result 	= サーバーとの通信に必要なBluetoothSocket(失敗時はnull)
 	 *  として返ってくる
+	 *  
+	 *  @param
+	 *  	device 接続したい相手のデバイス情報
 	 */
 	protected void startConnectingAsClient(BluetoothDevice device){
 		log("startConnectingAsClient");
 		isClientDevice = true;
 		String title = String.format("%sの検索", device.getName());
 		String message = "検索中...";
-		BlueToothConnectionTask btask = new BlueToothConnectionTask(this, mBtAdapter, true, device, this, title, message);
+		BlueToothConnectionTask btask = new BlueToothConnectionForSendTask(this, mBtAdapter, this, title, message, device);
 		btask.execute(new Object[] { null });
 	}
 	
 	/**
-	 * サーバーとしてクライアントからの接続を待つためのメソッド
+	 * サーバー(子機)としてクライアント(親機)からの接続を待つためのメソッド
 	 * 接続要求が受信した場合：didBlueToothResultReceiverで
 	 *  - type		= BlueToothResultReceiver.Type.CONECT
 	 *  - isClient 	= false
@@ -212,7 +219,9 @@ public abstract class BlueToothBaseActivity extends FragmentActivity implements 
 		mBtAdapter = BluetoothAdapter.getDefaultAdapter();
 		isClientDevice = false;
 		// 検索対象となっていない場合の処理
-		BlueToothConnectionTask btask = new BlueToothConnectionTask(this, mBtAdapter, false, null, this);
+		String title = String.format("待機");
+		String message = "親機からの接続待機中...";
+		BlueToothConnectionTask btask = new BlueToothConnectionForReceiveTask(this, mBtAdapter, this, title, message);
 		btask.execute(new Object[] { null });
 	}
 	
@@ -294,13 +303,6 @@ public abstract class BlueToothBaseActivity extends FragmentActivity implements 
 			log("onReceive - fin");
 		}
 	};
-	
-	/*
-	 * log用メソッド
-	 */
-	private void log(String message){
-		Log.d(TAG, message);
-	}
 	
 	private final Runnable delayFunc= new Runnable() {
 	    @Override

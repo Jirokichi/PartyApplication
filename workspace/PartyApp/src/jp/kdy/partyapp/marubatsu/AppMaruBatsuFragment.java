@@ -5,8 +5,9 @@ import static jp.kdy.partyapp.KYUtils.log;
 import java.io.IOException;
 
 import jp.kdy.bluetooth.BlueToothMessageResultReceiver;
-import jp.kdy.bluetooth.InterChangeTask;
-import jp.kdy.bluetooth.InterChangeTask.BlueToothResult;
+import jp.kdy.bluetooth.communication.CommunicationReceiverTask;
+import jp.kdy.bluetooth.communication.CommunicationSenderTask;
+import jp.kdy.bluetooth.communication.CommunicationTask.BlueToothResult;
 import jp.kdy.partyapp.BlueToothBaseApplication;
 import jp.kdy.partyapp.KYUtils;
 import jp.kdy.partyapp.R;
@@ -103,8 +104,7 @@ public class AppMaruBatsuFragment extends Fragment implements BlueToothMessageRe
 			mType = MyType.Maru;
 			hasPermissionToSet = false;
 			setmMyKindsTextView();
-			InterChangeTask ict = new InterChangeTask(mSocket, false, null);
-			ict.setBlueToothReceiver(this);
+			CommunicationReceiverTask ict = new CommunicationReceiverTask(mSocket, this);
 			ict.execute(new Object[] { "Wait=" + mSocket + ")" });
 		} else {
 			mType = MyType.Batsu;
@@ -124,8 +124,7 @@ public class AppMaruBatsuFragment extends Fragment implements BlueToothMessageRe
 			Toast.makeText(this.getActivity(), result.toString(), Toast.LENGTH_LONG).show();
 			if (mSocket != null) {
 				// 接続完了時の処理
-				InterChangeTask ict = new InterChangeTask(mSocket, false, null);
-				ict.setBlueToothReceiver(this);
+				CommunicationReceiverTask ict = new CommunicationReceiverTask(mSocket, this);
 				ict.execute(new Object[] { "X Wait=" + mSocket + ")" });
 			}
 			break;
@@ -187,8 +186,7 @@ public class AppMaruBatsuFragment extends Fragment implements BlueToothMessageRe
 
 		if (!KYUtils.DEBUG) {
 			hasPermissionToSet = false;
-			InterChangeTask ict = new InterChangeTask(mSocket, true, "" + i + j);
-			ict.setBlueToothReceiver(this);
+			CommunicationSenderTask ict = new CommunicationSenderTask(mSocket, this, "" + i + j);
 			ict.execute(new Object[] { "Send=" + mSocket + ")" });
 		}
 		// すべて埋まっているかのチェックを実施し、その後勝敗を決定する

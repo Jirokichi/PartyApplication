@@ -1,8 +1,9 @@
 package jp.kdy.partyapp;
 
 import jp.kdy.bluetooth.BlueToothMessageResultReceiver;
-import jp.kdy.bluetooth.InterChangeTask;
-import jp.kdy.bluetooth.InterChangeTask.BlueToothResult;
+import jp.kdy.bluetooth.communication.CommunicationReceiverTask;
+import jp.kdy.bluetooth.communication.CommunicationSenderTask;
+import jp.kdy.bluetooth.communication.CommunicationTask.BlueToothResult;
 import android.app.Activity;
 import android.bluetooth.BluetoothSocket;
 import android.os.Bundle;
@@ -13,10 +14,10 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import static jp.kdy.partyapp.KYUtils.*;
+
 public class ChatActivity extends Activity implements BlueToothMessageResultReceiver {
-
-	private static final String TAG = "App1Activity";
-
+	
 	BlueToothBaseApplication mApp;
 	BluetoothSocket mSocket;
 
@@ -39,8 +40,7 @@ public class ChatActivity extends Activity implements BlueToothMessageResultRece
 			Button b = (Button) this.findViewById(R.id.chatSendButton);
 			b.setEnabled(false);
 			
-			InterChangeTask ict = new InterChangeTask(mSocket, false, null);
-			ict.setBlueToothReceiver(this);
+			CommunicationReceiverTask ict = new CommunicationReceiverTask(mSocket, this);
 			ict.execute(new Object[] { "Wait=" + mSocket + ")" });
 		} else {
 			Button b = (Button) this.findViewById(R.id.chatSendButton);
@@ -59,13 +59,8 @@ public class ChatActivity extends Activity implements BlueToothMessageResultRece
 		TextView tv = (TextView)this.findViewById(R.id.chatBoard);
 		tv.setText(tv.getText() + "¥n" + "自分:" + message);
 		
-		InterChangeTask ict = new InterChangeTask(mSocket, true, message);
-		ict.setBlueToothReceiver(this);
+		CommunicationSenderTask ict = new CommunicationSenderTask(mSocket, this, message);
 		ict.execute(new Object[] { "Send=" + mSocket + ")" });
-	}
-
-	private void log(String message) {
-		Log.d(TAG, message);
 	}
 
 	@Override
@@ -78,8 +73,7 @@ public class ChatActivity extends Activity implements BlueToothMessageResultRece
 			Toast.makeText(this, result.toString(), Toast.LENGTH_LONG).show();
 			if (mSocket != null) {
 				// 接続完了時の処理
-				InterChangeTask ict = new InterChangeTask(mSocket, false, null);
-				ict.setBlueToothReceiver(this);
+				CommunicationReceiverTask ict = new CommunicationReceiverTask(mSocket, this);
 				ict.execute(new Object[] { "X Wait=" + mSocket + ")" });
 			}
 			break;
