@@ -2,8 +2,6 @@ package jp.kdy.partyapp;
 
 import static jp.kdy.partyapp.KYUtils.log;
 
-import java.util.ArrayList;
-
 import jp.kdy.bluetooth.ManagedDevices;
 import jp.kdy.bluetooth.connection.BlueToothConnectionForReceiveTask;
 import jp.kdy.bluetooth.connection.BlueToothConnectionForSendTask;
