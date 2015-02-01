@@ -1,0 +1,286 @@
+ECLIPSE ANDROID PROJECT IMPORT SUMMARY
+======================================
+
+Ignored Files:
+--------------
+The following files were *not* copied into the new Gradle project; you
+should evaluate whether these are still needed in your project and if
+so manually move them:
+
+* .gradle/
+* .gradle/2.2.1/
+* .gradle/2.2.1/taskArtifacts/
+* .gradle/2.2.1/taskArtifacts/cache.properties
+* .gradle/2.2.1/taskArtifacts/cache.properties.lock
+* .gradle/2.2.1/taskArtifacts/fileHashes.bin
+* .gradle/2.2.1/taskArtifacts/fileSnapshots.bin
+* .gradle/2.2.1/taskArtifacts/outputFileStates.bin
+* .gradle/2.2.1/taskArtifacts/taskArtifacts.bin
+* .idea/
+* .idea/.name
+* .idea/PartyApp.iml
+* .idea/compiler.xml
+* .idea/copyright/
+* .idea/copyright/profiles_settings.xml
+* .idea/encodings.xml
+* .idea/misc.xml
+* .idea/modules.xml
+* .idea/scopes/
+* .idea/scopes/scope_settings.xml
+* .idea/vcs.xml
+* .idea/workspace.xml
+* PartyApp.iml
+* app/
+* app/.idea/
+* app/.idea/compiler.xml
+* app/.idea/copyright/
+* app/.idea/copyright/profiles_settings.xml
+* app/.idea/encodings.xml
+* app/.idea/misc.xml
+* app/.idea/modules.xml
+* app/.idea/scopes/
+* app/.idea/scopes/scope_settings.xml
+* app/.idea/vcs.xml
+* app/.idea/workspace.xml
+* app/build/
+* app/build/generated/
+* app/build/generated/source/
+* app/build/generated/source/buildConfig/
+* app/build/generated/source/buildConfig/debug/
+* app/build/generated/source/buildConfig/debug/jp/
+* app/build/generated/source/buildConfig/debug/jp/kdy/
+* app/build/generated/source/buildConfig/debug/jp/kdy/partyapp/
+* app/build/generated/source/buildConfig/debug/jp/kdy/partyapp/BuildConfig.java
+* app/build/generated/source/buildConfig/test/
+* app/build/generated/source/buildConfig/test/debug/
+* app/build/generated/source/buildConfig/test/debug/jp/
+* app/build/generated/source/buildConfig/test/debug/jp/kdy/
+* app/build/generated/source/buildConfig/test/debug/jp/kdy/partyapp/
+* app/build/generated/source/buildConfig/test/debug/jp/kdy/partyapp/test/
+* app/build/generated/source/buildConfig/test/debug/jp/kdy/partyapp/test/BuildConfig.java
+* app/build/generated/source/r/
+* app/build/generated/source/r/debug/
+* app/build/generated/source/r/debug/jp/
+* app/build/generated/source/r/debug/jp/kdy/
+* app/build/generated/source/r/debug/jp/kdy/partyapp/
+* app/build/generated/source/r/debug/jp/kdy/partyapp/R.java
+* app/build/generated/source/r/test/
+* app/build/generated/source/r/test/debug/
+* app/build/generated/source/r/test/debug/jp/
+* app/build/generated/source/r/test/debug/jp/kdy/
+* app/build/generated/source/r/test/debug/jp/kdy/partyapp/
+* app/build/generated/source/r/test/debug/jp/kdy/partyapp/test/
+* app/build/generated/source/r/test/debug/jp/kdy/partyapp/test/R.java
+* app/build/intermediates/
+* app/build/intermediates/classes/
+* app/build/intermediates/classes/debug/
+* app/build/intermediates/classes/debug/jp/
+* app/build/intermediates/classes/debug/jp/kdy/
+* app/build/intermediates/classes/debug/jp/kdy/bluetooth/
+* app/build/intermediates/classes/debug/jp/kdy/bluetooth/BlueToothMessageResultReceiver.class
+* app/build/intermediates/classes/debug/jp/kdy/bluetooth/ManagedDevices$KYDevice.class
+* app/build/intermediates/classes/debug/jp/kdy/bluetooth/ManagedDevices.class
+* app/build/intermediates/classes/debug/jp/kdy/bluetooth/communication/
+* app/build/intermediates/classes/debug/jp/kdy/bluetooth/communication/CommunicationReceiverTask.class
+* app/build/intermediates/classes/debug/jp/kdy/bluetooth/communication/CommunicationSenderTask.class
+* app/build/intermediates/classes/debug/jp/kdy/bluetooth/communication/CommunicationTask$BlueToothResult.class
+* app/build/intermediates/classes/debug/jp/kdy/bluetooth/communication/CommunicationTask$ResultType.class
+* app/build/intermediates/classes/debug/jp/kdy/bluetooth/communication/CommunicationTask.class
+* app/build/intermediates/classes/debug/jp/kdy/bluetooth/connection/
+* app/build/intermediates/classes/debug/jp/kdy/bluetooth/connection/BlueToothConnectionForReceiveTask.class
+* app/build/intermediates/classes/debug/jp/kdy/bluetooth/connection/BlueToothConnectionForSendTask.class
+* app/build/intermediates/classes/debug/jp/kdy/bluetooth/connection/BlueToothConnectionResultReceiver.class
+* app/build/intermediates/classes/debug/jp/kdy/bluetooth/connection/BlueToothConnectionTask.class
+* app/build/intermediates/classes/debug/jp/kdy/partyapp/
+* app/build/intermediates/classes/debug/jp/kdy/partyapp/BlueToothBaseActivity$1.class
+* app/build/intermediates/classes/debug/jp/kdy/partyapp/BlueToothBaseActivity$2.class
+* app/build/intermediates/classes/debug/jp/kdy/partyapp/BlueToothBaseActivity$ActivityRequestCode.class
+* app/build/intermediates/classes/debug/jp/kdy/partyapp/BlueToothBaseActivity.class
+* app/build/intermediates/classes/debug/jp/kdy/partyapp/BlueToothBaseApplication.class
+* app/build/intermediates/classes/debug/jp/kdy/partyapp/BuildConfig.class
+* app/build/intermediates/classes/debug/jp/kdy/partyapp/ChatActivity$1.class
+* app/build/intermediates/classes/debug/jp/kdy/partyapp/ChatActivity.class
+* app/build/intermediates/classes/debug/jp/kdy/partyapp/DeviceConnectedByBluetooth.class
+* app/build/intermediates/classes/debug/jp/kdy/partyapp/DeviceListAdapter$1.class
+* app/build/intermediates/classes/debug/jp/kdy/partyapp/DeviceListAdapter$HolderView.class
+* app/build/intermediates/classes/debug/jp/kdy/partyapp/DeviceListAdapter.class
+* app/build/intermediates/classes/debug/jp/kdy/partyapp/HomeActivity$1.class
+* app/build/intermediates/classes/debug/jp/kdy/partyapp/HomeActivity$2$1.class
+* app/build/intermediates/classes/debug/jp/kdy/partyapp/HomeActivity$2.class
+* app/build/intermediates/classes/debug/jp/kdy/partyapp/HomeActivity$3.class
+* app/build/intermediates/classes/debug/jp/kdy/partyapp/HomeActivity$4.class
+* app/build/intermediates/classes/debug/jp/kdy/partyapp/HomeActivity$AppName.class
+* app/build/intermediates/classes/debug/jp/kdy/partyapp/HomeActivity$FragmentTag.class
+* app/build/intermediates/classes/debug/jp/kdy/partyapp/HomeActivity.class
+* app/build/intermediates/classes/debug/jp/kdy/partyapp/KYUtils.class
+* app/build/intermediates/classes/debug/jp/kdy/partyapp/R$anim.class
+* app/build/intermediates/classes/debug/jp/kdy/partyapp/R$attr.class
+* app/build/intermediates/classes/debug/jp/kdy/partyapp/R$dimen.class
+* app/build/intermediates/classes/debug/jp/kdy/partyapp/R$drawable.class
+* app/build/intermediates/classes/debug/jp/kdy/partyapp/R$id.class
+* app/build/intermediates/classes/debug/jp/kdy/partyapp/R$layout.class
+* app/build/intermediates/classes/debug/jp/kdy/partyapp/R$menu.class
+* app/build/intermediates/classes/debug/jp/kdy/partyapp/R$string.class
+* app/build/intermediates/classes/debug/jp/kdy/partyapp/R$style.class
+* app/build/intermediates/classes/debug/jp/kdy/partyapp/R.class
+* app/build/intermediates/classes/debug/jp/kdy/partyapp/marubatsu/
+* app/build/intermediates/classes/debug/jp/kdy/partyapp/marubatsu/AppMaruBatsuActivity.class
+* app/build/intermediates/classes/debug/jp/kdy/partyapp/marubatsu/AppMaruBatsuFragment$1.class
+* app/build/intermediates/classes/debug/jp/kdy/partyapp/marubatsu/AppMaruBatsuFragment$2.class
+* app/build/intermediates/classes/debug/jp/kdy/partyapp/marubatsu/AppMaruBatsuFragment.class
+* app/build/intermediates/classes/debug/jp/kdy/partyapp/marubatsu/MaruBatsuView.class
+* app/build/intermediates/classes/debug/jp/kdy/partyapp/marubatsu/MyTouchListener$MyType.class
+* app/build/intermediates/classes/debug/jp/kdy/partyapp/marubatsu/MyTouchListener$StatusOfRecord.class
+* app/build/intermediates/classes/debug/jp/kdy/partyapp/marubatsu/MyTouchListener.class
+* app/build/intermediates/classes/debug/jp/kdy/util/
+* app/build/intermediates/classes/debug/jp/kdy/util/MyDialogListener.class
+* app/build/intermediates/classes/debug/jp/kdy/util/MyFragmentDialog$1.class
+* app/build/intermediates/classes/debug/jp/kdy/util/MyFragmentDialog$2.class
+* app/build/intermediates/classes/debug/jp/kdy/util/MyFragmentDialog$MyDialogListener.class
+* app/build/intermediates/classes/debug/jp/kdy/util/MyFragmentDialog$TYPE.class
+* app/build/intermediates/classes/debug/jp/kdy/util/MyFragmentDialog.class
+* app/build/intermediates/dex/
+* app/build/intermediates/dex/debug/
+* app/build/intermediates/dex/debug/classes.dex
+* app/build/intermediates/incremental/
+* app/build/intermediates/incremental/aidl/
+* app/build/intermediates/incremental/aidl/debug/
+* app/build/intermediates/incremental/aidl/debug/dependency.store
+* app/build/intermediates/incremental/aidl/test/
+* app/build/intermediates/incremental/aidl/test/debug/
+* app/build/intermediates/incremental/aidl/test/debug/dependency.store
+* app/build/intermediates/incremental/mergeAssets/
+* app/build/intermediates/incremental/mergeAssets/debug/
+* app/build/intermediates/incremental/mergeAssets/debug/merger.xml
+* app/build/intermediates/incremental/mergeAssets/test/
+* app/build/intermediates/incremental/mergeAssets/test/debug/
+* app/build/intermediates/incremental/mergeAssets/test/debug/merger.xml
+* app/build/intermediates/incremental/mergeResources/
+* app/build/intermediates/incremental/mergeResources/debug/
+* app/build/intermediates/incremental/mergeResources/debug/merger.xml
+* app/build/intermediates/incremental/mergeResources/test/
+* app/build/intermediates/incremental/mergeResources/test/debug/
+* app/build/intermediates/incremental/mergeResources/test/debug/merger.xml
+* app/build/intermediates/manifests/
+* app/build/intermediates/manifests/full/
+* app/build/intermediates/manifests/full/debug/
+* app/build/intermediates/manifests/full/debug/AndroidManifest.xml
+* app/build/intermediates/manifests/test/
+* app/build/intermediates/manifests/test/debug/
+* app/build/intermediates/manifests/test/debug/AndroidManifest.xml
+* app/build/intermediates/pre-dexed/
+* app/build/intermediates/pre-dexed/debug/
+* app/build/intermediates/pre-dexed/debug/support-v4-19.1.0-2bf71b3ad50ad8f8a266851ff3b891c423df67e7.jar
+* app/build/intermediates/res/
+* app/build/intermediates/res/debug/
+* app/build/intermediates/res/debug/anim/
+* app/build/intermediates/res/debug/anim/motion.xml
+* app/build/intermediates/res/debug/drawable-hdpi-v4/
+* app/build/intermediates/res/debug/drawable-hdpi-v4/batsu.png
+* app/build/intermediates/res/debug/drawable-hdpi-v4/ic_launcher.png
+* app/build/intermediates/res/debug/drawable-hdpi-v4/maru.png
+* app/build/intermediates/res/debug/drawable-mdpi-v4/
+* app/build/intermediates/res/debug/drawable-mdpi-v4/ic_launcher.png
+* app/build/intermediates/res/debug/drawable-xhdpi-v4/
+* app/build/intermediates/res/debug/drawable-xhdpi-v4/ic_launcher.png
+* app/build/intermediates/res/debug/drawable-xxhdpi-v4/
+* app/build/intermediates/res/debug/drawable-xxhdpi-v4/ic_launcher.png
+* app/build/intermediates/res/debug/drawable/
+* app/build/intermediates/res/debug/drawable/bamboo.png
+* app/build/intermediates/res/debug/drawable/white.png
+* app/build/intermediates/res/debug/layout/
+* app/build/intermediates/res/debug/layout/activity_app_3game.xml
+* app/build/intermediates/res/debug/layout/activity_app_chat.xml
+* app/build/intermediates/res/debug/layout/activity_app_marubatsu.xml
+* app/build/intermediates/res/debug/layout/activity_home.xml
+* app/build/intermediates/res/debug/layout/fragment_app_marubatsu.xml
+* app/build/intermediates/res/debug/layout/list_device.xml
+* app/build/intermediates/res/debug/layout/sample_activity_bluetooth.xml
+* app/build/intermediates/res/debug/menu/
+* app/build/intermediates/res/debug/menu/home.xml
+* app/build/intermediates/res/debug/values-sw720dp-land-v13/
+* app/build/intermediates/res/debug/values-sw720dp-land-v13/values.xml
+* app/build/intermediates/res/debug/values-v11/
+* app/build/intermediates/res/debug/values-v11/values.xml
+* app/build/intermediates/res/debug/values-v14/
+* app/build/intermediates/res/debug/values-v14/values.xml
+* app/build/intermediates/res/debug/values/
+* app/build/intermediates/res/debug/values/values.xml
+* app/build/intermediates/res/resources-debug-test.ap_
+* app/build/intermediates/res/resources-debug.ap_
+* app/build/intermediates/res/test/
+* app/build/intermediates/res/test/debug/
+* app/build/intermediates/res/test/debug/drawable-hdpi-v4/
+* app/build/intermediates/res/test/debug/drawable-hdpi-v4/ic_launcher.png
+* app/build/intermediates/res/test/debug/drawable-ldpi-v4/
+* app/build/intermediates/res/test/debug/drawable-ldpi-v4/ic_launcher.png
+* app/build/intermediates/res/test/debug/drawable-mdpi-v4/
+* app/build/intermediates/res/test/debug/drawable-mdpi-v4/ic_launcher.png
+* app/build/intermediates/res/test/debug/drawable-xhdpi-v4/
+* app/build/intermediates/res/test/debug/drawable-xhdpi-v4/ic_launcher.png
+* app/build/intermediates/res/test/debug/values/
+* app/build/intermediates/res/test/debug/values/values.xml
+* app/build/intermediates/tmp/
+* app/build/intermediates/tmp/dex/
+* app/build/intermediates/tmp/dex/debug/
+* app/build/intermediates/tmp/dex/debug/inputList.txt
+* app/build/outputs/
+* app/build/outputs/apk/
+* app/build/outputs/apk/app-debug-unaligned.apk
+* app/build/outputs/apk/app-debug.apk
+* app/build/outputs/apk/manifest-merger-debug-report.txt
+* app/src/
+* app/src/main/
+* app/src/main/java/
+* app/src/main/java/.DS_Store
+* app/src/main/java/jp/
+* app/src/main/java/jp/.DS_Store
+* app/src/main/java/jp/kdy/
+* app/src/main/java/jp/kdy/.DS_Store
+* app/src/main/java/jp/kdy/partyapp/
+* app/src/main/java/jp/kdy/partyapp/.DS_Store
+* build/
+* build/intermediates/
+* build/intermediates/dex-cache/
+* build/intermediates/dex-cache/cache.xml
+* build/intermediates/model_data.bin
+* ic_launcher-web.png
+* proguard-project.txt
+
+Replaced Jars with Dependencies:
+--------------------------------
+The importer recognized the following .jar files as third party
+libraries and replaced them with Gradle dependencies instead. This has
+the advantage that more explicit version information is known, and the
+libraries can be updated automatically. However, it is possible that
+the .jar file in your project was of an older version than the
+dependency we picked, which could render the project not compileable.
+You can disable the jar replacement in the import wizard and try again:
+
+android-support-v4.jar => com.android.support:support-v4:19.1.0
+
+Moved Files:
+------------
+Android Gradle projects use a different directory structure than ADT
+Eclipse projects. Here's how the projects were restructured:
+
+* AndroidManifest.xml => app/src/main/AndroidManifest.xml
+* res/ => app/src/main/res/
+* src/ => app/src/main/java/
+* /Users/yuya/Public/PartyApplication/workspace/TestPartyApp/res/ => app/src/androidTest/res/
+* /Users/yuya/Public/PartyApplication/workspace/TestPartyApp/src/ => app/src/androidTest/java/
+
+Next Steps:
+-----------
+You can now build the project. The Gradle project needs network
+connectivity to download dependencies.
+
+Bugs:
+-----
+If for some reason your project does not build, and you determine that
+it is due to a bug or limitation of the Eclipse to Gradle importer,
+please file a bug at http://b.android.com with category
+Component-Tools.
+
+(This import summary is for your information only, and can be deleted
+after import once you are satisfied with the results.)
